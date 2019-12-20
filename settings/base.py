@@ -25,7 +25,7 @@ SECRET_KEY = '^#0a1!ujq3c!i6rzt!z1@174bo5&-^tk-bv#8)dz6&zj3l9cl9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com']
+ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
