@@ -1,0 +1,17 @@
+djongo
+pymongo
+dnspython
+djongo-mongo-version-fix
+django-import-export
+django-mongodb-engine
+django-debug-toolbar
+django-htmlmin
+django_admin_material
+django-mobile
+sentry-sdk
+djangorestframework
+psycopg2
+gunicorn
+dj-database-url
+whitenoise
+dj_database_url
