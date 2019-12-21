@@ -14,7 +14,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 DATABASES = {
         'default': {
         'ENGINE': 'djongo',
