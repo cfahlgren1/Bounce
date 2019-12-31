@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_admin_material',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,13 +123,14 @@ STATIC_URL = '/static/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
+PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__), "..\\..")
 STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Extra lookup directories for collectstatic to find static files
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
+    BASE_DIR + '\\courts\\templates\\courts\\home\\assets', #os.path.join wasnt working
+    BASE_DIR + '\\courts\\templates\\courts\\map\\assets'
 )
 
 #  Add configuration for static files storage using whitenoise

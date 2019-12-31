@@ -1,6 +1,7 @@
 from .base import *
 
 INSTALLED_APPS += [
+    'import_export',
     'courts',
 ]
 MIDDLEWARE = [

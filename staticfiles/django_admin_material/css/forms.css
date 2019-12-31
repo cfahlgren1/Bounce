@@ -1,0 +1,26 @@
+.related-widget-wrapper {
+    overflow: visible;
+    float: unset;
+}
+
+form .related-widget-wrapper ul {
+    display: none;
+}
+
+.selector ul.selector-chooser {
+    display: block;
+    background-color: unset;
+    border-radius: unset;
+}
+
+fieldset {
+    border: none;
+}
+
+.vCheckboxLabel {
+    display: none;
+}
+
+label {
+    z-index: 1;
+}

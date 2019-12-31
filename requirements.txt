@@ -1,5 +1,4 @@
 djongo
-pymongo
 dnspython
 djongo-mongo-version-fix
 django-import-export
