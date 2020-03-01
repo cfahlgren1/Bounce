@@ -1,0 +1,3 @@
+[console_scripts]
+pyminify = htmlmin.commands:main
+

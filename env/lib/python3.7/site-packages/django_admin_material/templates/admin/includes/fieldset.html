@@ -1,0 +1,58 @@
+{% load djangoadminmaterial %}
+<style>
+.select2 {
+    width: 100%!important;
+    height: 3rem;
+    border-bottom: 1px solid #9e9e9e;
+}
+.select2-selection {
+    border: unset!important;
+}
+</style>
+<div class="module aligned {{ fieldset.classes }}">
+    {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}
+    {% if fieldset.description %}
+        <div class="description">{{ fieldset.description|safe }}</div>
+    {% endif %}
+    {% for line in fieldset %}
+        <div class="row form-row{% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
+            <!-- {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %} -->
+            {% for field in line %}
+            {% with line.fields|length as cols%}
+            <div class="col s{{ 12|div:cols }} {% if field.errors %}invalid{% endif %}">
+                <div{% if not line.fields|length_is:'1' %} class=" input-field fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %} class="checkbox-row"{% endif %}>
+                    {% if field.is_checkbox %}
+                    <div class="valign-wrapper"><label>{{ field.field }}<span>{{ field.label_tag }}</span></label></div>
+                    {% else %}
+                        {{ field.label_tag }}
+                        {% if field.is_readonly %}
+                            <div class="readonly">{{ field.contents }}</div>
+                        {% else %}
+                            {{ field.field }}
+                        {% endif %}
+                    {% endif %}
+                    {% if field.field.help_text %}
+                        <div class="help">{{ field.field.help_text|safe }}</div>
+                    {% endif %}
+                    <!-- {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %} -->
+                    {% if not field.is_readonly %}{{ field.errors }}{% endif %}
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+$(document).ready(function(){
+    var elem = $('select');
+    if (elem.parents('.selector').length) {
+        // elem.formSelect();
+        elem.addClass("browser-default");
+    }
+    elem.formSelect();
+    // $('select').formSelect();
+    $("input[type='checkbox']").addClass("filled-in");
+});
+</script>
