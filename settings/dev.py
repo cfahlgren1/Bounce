@@ -1,4 +1,5 @@
 from .base import *
+import os
 
 INSTALLED_APPS += [
     'import_export',
@@ -17,9 +18,9 @@ MIDDLEWARE = [
 
 DATABASES = {
         'default': {
-        'ENGINE': 'djongo',
+        'ENGINE': os.environ.get('DB_ENGINE'),
         'ENFORCE_SCHEMA': False,
-        'NAME': 'test_Cluster0',
-        'HOST': 'mongodb://admin:archlinux@cluster0-shard-00-00-dh4kn.mongodb.net:27017,cluster0-shard-00-01-dh4kn.mongodb.net:27017,cluster0-shard-00-02-dh4kn.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority'
+        'NAME': os.environ.get('DB_NAME'),
+        'HOST': os.environ.get('DB_HOST')
     }
 }
