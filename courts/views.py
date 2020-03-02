@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Court, MapStyle
+from .models import Court, MapStyle, MapAPIKey
 from tablib import Dataset
 from .resources import CourtResource
 from django.contrib.auth.models import User, Group
@@ -48,6 +48,6 @@ def home(request):
 
 def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
+    mapbox_key = MapAPIKey.objects.first() # get first api_key; only should be one, can be changed later if rotating api keys etc.
 
-    return render(request, 'courts/map/index.html', {'map_style': style,})
-
+    return render(request, 'courts/map/index.html', {'map_style': style,}, {'api_key': mapbox_key,})
