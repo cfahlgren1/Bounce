@@ -28,15 +28,14 @@ class CourtAdmin(ImportExportModelAdmin):
     search_fields = ['id', 'name', 'road','city', 'state']
     list_filter = ['likes','state','country']
 
-@admin.register(MapAPIKey)
 class MapAPIKeyAdmin(admin.ModelAdmin):
-    list_display = ('api_key')
+    list_display = ('api_key',)
     search_fields = ['api_key']
 
     def has_delete_permission(self, request, obj=None):
         return False
 
 # Register your models here.
-# admin.site.register(Court, CourtAdmin)
+admin.site.register(MapAPIKey, MapAPIKeyAdmin)
 admin.site.register(MapStyle, MapStyleAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
