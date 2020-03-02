@@ -11,4 +11,5 @@ urlpatterns = [
     # home page
     url(r'^$', views.detail, name='detail'),
 ]
+
 urlpatterns += staticfiles_urlpatterns()

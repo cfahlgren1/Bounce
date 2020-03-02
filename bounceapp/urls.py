@@ -18,10 +18,18 @@ from django.urls import include, path
 from courts import views
 from django.conf import settings
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
-    path('courts/', include('courts.urls'))]
+    path('courts/', include('courts.urls')),
+    path('sentry-debug/', trigger_error),
+
+    ]
 
 if settings.DEBUG:
     import debug_toolbar
