@@ -1,4 +1,4 @@
-from .models import Court, MapStyle
+from .models import Court, MapStyle, MapAPIKey
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
@@ -27,6 +27,14 @@ class CourtAdmin(ImportExportModelAdmin):
     list_display = ('id','name','road','city','state')
     search_fields = ['id', 'name', 'road','city', 'state']
     list_filter = ['likes','state','country']
+
+@admin.register(MapAPIKey)
+class MapAPIKeyAdmin(admin.ModelAdmin):
+    list_display = ('api_key')
+    search_fields = ['api_key']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 # Register your models here.
 # admin.site.register(Court, CourtAdmin)

@@ -29,6 +29,14 @@ class MapStyle(SingleActiveModel):
     def __str__(self):
         return self.description
 
+class MapAPIKey(SingleActiveModel):
+    api_key = models.CharField(max_length=100)
+
+    def __str_(self):
+        return self.api_key
+
+
+
 class Point(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
