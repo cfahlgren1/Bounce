@@ -48,6 +48,6 @@ def home(request):
 
 def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
-    mapbox_key = MapAPIKey.objects.first() # get first api_key; only should be one, can be changed later if rotating api keys etc.
+    mapbox_key = MapAPIKey.objects.get(active=True) # get first api_key; only should be one, can be changed later if rotating api keys etc.
 
     return render(request, 'courts/map/index.html', {'map_style': style,}, {'api_key': mapbox_key,})
