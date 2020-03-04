@@ -32,7 +32,7 @@ class MapStyle(SingleActiveModel):
 class MapAPIKey(SingleActiveModel):
     api_key = models.CharField(max_length=100)
 
-    def __str_(self):
+    def __str__(self):
         return self.api_key
 
 class Point(models.Model):

@@ -16,6 +16,20 @@ class MapStyleTest(TestCase):
         self.assertEqual(w.map_style, 'testtesttest') #test mapstyle code created above
         self.assertEqual(w.description, 'onlyatestdescription') #test description created above
 
+#MapAPIKey Tests
+class MapAPIKeyTest(TestCase):
+    def create_api_key(self, key='testkeytestkey'):
+        return MapAPIKey.objects.create(api_key=key)
+
+    def test_map_api_rep(self):
+        w = self.create_api_key()
+        self.assertTrue(isinstance(w, MapAPIKey))
+        self.assertEqual(w.__str__(), w.api_key)
+
+    def test_map_values(self):
+        w = self.create_api_key()
+        self.assertEqual(w.api_key, 'testkeytestkey')
+
 
 
 
