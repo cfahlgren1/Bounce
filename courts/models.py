@@ -30,7 +30,6 @@ class MapStyle(SingleActiveModel):
         return self.description
 
 class MapAPIKey(SingleActiveModel):
-    id = models.CharField(primary_key=True, default=uuid.uuid4(),max_length=50, editable=False, unique=True)
     api_key = models.CharField(max_length=100)
 
     def __str_(self):

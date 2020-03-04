@@ -1,4 +1,3 @@
-sqreen
 beautifulsoup4==4.8.2
 bson==0.5.8
 certifi==2019.11.28

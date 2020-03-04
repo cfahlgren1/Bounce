@@ -29,7 +29,7 @@ class CourtAdmin(ImportExportModelAdmin):
     list_filter = ['likes','state','country']
 
 class MapAPIKeyAdmin(admin.ModelAdmin):
-    list_display = ('api_key',)
+    list_display = ('api_key', 'active')
     search_fields = ['api_key']
 
     def has_delete_permission(self, request, obj=None):
