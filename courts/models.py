@@ -35,8 +35,6 @@ class MapAPIKey(SingleActiveModel):
     def __str_(self):
         return self.api_key
 
-
-
 class Point(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
