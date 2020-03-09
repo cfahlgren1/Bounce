@@ -28,8 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1']
-
+ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -142,7 +141,9 @@ STATIC_URL = '/static/'
 # Extra lookup directories for collectstatic to find static files
 STATICFILES_DIRS = (
     BASE_DIR + '\\courts\\templates\\courts\\home\\assets', #os.path.join wasnt working
-    BASE_DIR + '\\courts\\templates\\courts\\map\\assets'
+    BASE_DIR + '\\courts\\templates\\courts\\map\\assets',
+    BASE_DIR + '\\courts\\templates\\404\\css',
+    BASE_DIR + '\\courts\\templates\\500\\assets'
 )
 
 #  Add configuration for static files storage using whitenoise

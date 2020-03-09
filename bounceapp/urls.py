@@ -22,8 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
     path('courts/', include('courts.urls')),
-    ]
-
+]
+handler500 = 'courts.views.handler500'
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]

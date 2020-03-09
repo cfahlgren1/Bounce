@@ -12,6 +12,8 @@
             }
         }, options);
         $element.select2(settings);
+        // Disable select from materialize
+        $element.siblings('input').css('display', 'none');
     };
 
     $.fn.djangoAdminSelect2 = function(options) {

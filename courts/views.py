@@ -51,3 +51,6 @@ def detail(request):
     mapbox_key = MapAPIKey.objects.get(active=True) # get first api_key; only should be one, can be changed later if rotating api keys etc.
 
     return render(request, 'courts/map/index.html', {'map_style': style,'api_key': mapbox_key.api_key,})
+
+def handler500(request):
+    return render(request, '500/index.html', status=500)

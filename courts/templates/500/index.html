@@ -1,10 +1,11 @@
+{% load static from staticfiles %}
 <!DOCTYPE html>
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Error 500 — #CodePenChallenge</title>
+  <title>Bounce Server Error</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400|Oswald:600'><link rel="stylesheet" href="./style.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400|Oswald:600'><link rel="stylesheet" href="{% static 'style.css' %}">
 
 </head>
 <body>
@@ -14,9 +15,8 @@
   <div class="error-num__clip">500</div>
 </div>
 <p id="desc">Uh oh, there seems to be a problem.</p>
-<p>Let me help you find <a href="https://codepen.io/" target="_blank">a way out</a></p>
+<p>Let me help you find <a href="/" target="_self">a way out</a></p>
 <!-- partial -->
-  <script  src="./script.js"></script>
-
+  <script  src="{% static 'script.js' %}"></script>
 </body>
 </html>
