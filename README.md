@@ -29,6 +29,6 @@ Bounce uses a number of open source projects and APIs to work properly:
 * [jQuery] - duh
 
 # ToDo
-* Add 404 Page
+~~* Add 404 Page~~
 * Design Homepage
 * Build Continous Integration Pipeline through Heroku
