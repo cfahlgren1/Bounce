@@ -31,12 +31,12 @@ a:hover {
 
 .sidebar {
   position: absolute;
-  width: 27%;
+  width: 400px;
   height: 100%;
   top: 0;
   left: 0;
   overflow: hidden;
-  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  /* border-right: 1px solid rgba(0, 0, 0, 0.25); */
 }
 
 .pad2 {
@@ -45,15 +45,26 @@ a:hover {
 
 .map {
   position: absolute;
-  left: 27%;
+  /* left: 27%; */
   width: 73%;
   top: 0;
   bottom: 0;
 }
 
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
 .heading {
   color: #fff;
-  background-color: #00853e;
+  background-color: #555;
   border-bottom: 1px solid #eee;
   height: 60px;
   line-height: 60px;
@@ -73,11 +84,22 @@ a:hover {
   text-decoration: none;
 }
 
+.listings .item:hover{
+  background-color: #555;
+  color: white;
+}
+
+.listings .item:hover .title{
+  background-color: #555;
+  color: white;
+}
+
 .listings .item:last-child { border-bottom: none; }
 
 .listings .item .title {
   display: block;
-  color: #00853e;
+  color: #white;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -85,15 +107,8 @@ a:hover {
   font-weight: 400;
 }
 
-.listings .item.active .title,
-.listings .item .title:hover { color: #8cc63f; }
-
-.listings .item.active {
-  background-color: #f8f8f8;
-}
-
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 15px;
   height: 3px;
   border-left: 0;
   background: rgba(0, 0, 0, 0.1);
@@ -104,7 +119,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00853e;
+  background: #555;
   border-radius: 0;
 }
 
@@ -121,8 +136,8 @@ a:hover {
 .map {
   border-left: 1px solid #fff;
   position: absolute;
-  left: 27%;
-  width: 73%;
+  margin-left: 400px;
+  width: 100%;
   top: 0;
   bottom: 0;
 }
