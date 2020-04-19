@@ -1,12 +1,13 @@
 # Bounce - Basketball Court Finder
 ##### Dev: Caleb Fahlgren
 ##### Project Email: bounceapp@protonmail.com
+##### URL: https://bouncemap.com
  
 # What is Bounce?
 
 Bounce is a web app build in Django that locates and displays the nearest basketball courts in the area. With over 48,000 documented basketball across North America, there is bound to be one near you.
 
-![Image](https://i.ibb.co/QkZ2mNR/courts.png)
+![Image](https://i.ibb.co/Mp1dxwB/readme.jpg)
 
 # Features
   - Basketball court listing of outdoor courts near specified address/location
