@@ -137,7 +137,7 @@ a:hover {
   border-left: 1px solid #fff;
   position: absolute;
   margin-left: 400px;
-  width: 100%;
+  width: -webkit-fill-available;
   top: 0;
   bottom: 0;
 }
