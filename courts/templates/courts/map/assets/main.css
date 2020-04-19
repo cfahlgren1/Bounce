@@ -64,7 +64,7 @@ a:hover {
 
 .heading {
   color: #fff;
-  background-color: #4178af;
+  background-color: #4c5d7b;
   border-bottom: 1px solid #eee;
   height: 60px;
   line-height: 60px;
@@ -85,12 +85,12 @@ a:hover {
 }
 
 .listings .item:hover{
-  background-color: #4178af;
+  background-color: #4c5d7b;
   color: white;
 }
 
 .listings .item:hover .title{
-  background-color: #4178af;
+  background-color: #4c5d7b;
   color: white;
 }
 
@@ -119,7 +119,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4178af;
+  background: #4c5d7b;
   border-radius: 0;
 }
 
