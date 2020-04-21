@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 from courts import views
 from django.conf import settings
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
+    path('robots.txt/', views.robots_txt),
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
     path('courts/', include('courts.urls')),

@@ -4,6 +4,8 @@ from tablib import Dataset
 from .resources import CourtResource
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -45,6 +47,14 @@ def simple_upload(request):
 
 def home(request):
     return render(request, 'courts/home/index.html')
+
+@require_GET
+def robots_txt(request):
+    lines = [
+        "User-Agent: *",
+
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
