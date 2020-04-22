@@ -4,8 +4,42 @@ from tablib import Dataset
 from .resources import CourtResource
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_GET
+from django.template import Context, loader
+
+
+
+# list of mobile User Agents
+mobile_uas = [
+	'w3c ','acs-','alav','alca','amoi','audi','avan','benq','bird','blac',
+	'blaz','brew','cell','cldc','cmd-','dang','doco','eric','hipt','inno',
+	'ipaq','java','jigs','kddi','keji','leno','lg-c','lg-d','lg-g','lge-',
+	'maui','maxo','midp','mits','mmef','mobi','mot-','moto','mwbp','nec-',
+	'newt','noki','oper','palm','pana','pant','phil','play','port','prox',
+	'qwap','sage','sams','sany','sch-','sec-','send','seri','sgh-','shar',
+	'sie-','siem','smal','smar','sony','sph-','symb','t-mo','teli','tim-',
+	'tosh','tsm-','upg1','upsi','vk-v','voda','wap-','wapa','wapi','wapp',
+	'wapr','webc','winw','winw','xda','xda-'
+	]
+
+mobile_ua_hints = [ 'SymbianOS', 'Opera Mini', 'iPhone' ]
+
+
+def mobileBrowser(request):
+    ''' Super simple device detection, returns True for mobile devices '''
+
+    mobile_browser = False
+    ua = request.META['HTTP_USER_AGENT'].lower()[0:4]
+
+    if (ua in mobile_uas):
+        mobile_browser = True
+    else:
+        for hint in mobile_ua_hints:
+            if request.META['HTTP_USER_AGENT'].find(hint) > 0:
+                mobile_browser = True
+
+    return mobile_browser
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -60,7 +94,13 @@ def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
     mapbox_key = MapAPIKey.objects.get(active=True) # get first api_key; only should be one, can be changed later if rotating api keys etc.
 
-    return render(request, 'courts/map/index.html', {'map_style': style,'api_key': mapbox_key.api_key,})
+    if mobileBrowser(request):
+        t = loader.get_template('courts/map/m_index.html')
+    else:
+        t = loader.get_template('courts/map/index.html')
+
+    c = {'map_style': style,'api_key': mapbox_key.api_key,}  # page data
+    return HttpResponse(t.render(c))
 
 def handler500(request):
     return render(request, '500/index.html', status=500)
