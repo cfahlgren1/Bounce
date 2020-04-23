@@ -1,6 +1,7 @@
 from .base import *
 import os
 
+
 INSTALLED_APPS += [
     'import_export',
     'courts',

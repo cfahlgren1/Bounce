@@ -3,10 +3,12 @@ from .models import Court, MapStyle, MapAPIKey
 from tablib import Dataset
 from .resources import CourtResource
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.views.decorators.http import require_GET
-from django.template import Context, loader
+from django.template import loader
+
+from rest_framework import viewsets
+from .serializers import UserSerializer, GroupSerializer, CourtSerializer, MapStyleSerializer, MapAPIKeySerializer
 
 
 
@@ -41,29 +43,6 @@ def mobileBrowser(request):
 
     return mobile_browser
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-
-class MapStyleViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = MapStyle.objects.all()
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-
-class CourtViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Court.objects.all().order_by('id')
 
 def simple_upload(request):
     if request.method == 'POST':
@@ -101,3 +80,40 @@ def detail(request):
 
 def handler500(request):
     return render(request, '500/index.html', status=500)
+
+
+# API METHODS
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+
+class MapStyleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = MapStyle.objects.all()
+    serializer_class = MapStyleSerializer
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+class CourtViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Court.objects.all().order_by('id')
+    serializer_class = CourtSerializer
+
+class MapAPIKeyViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = MapAPIKey.objects.all()
+    serializer_class = MapAPIKeySerializer

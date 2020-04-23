@@ -17,9 +17,18 @@ from django.contrib import admin
 from django.urls import include, path
 from courts import views
 from django.conf import settings
-from django.views.generic.base import TemplateView
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+router.register(r'courts', views.CourtViewSet)
+router.register(r'mapstyles', views.MapStyleViewSet)
+router.register(r'api_keys', views.MapAPIKeyViewSet)
 
 urlpatterns = [
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('robots.txt/', views.robots_txt),
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
