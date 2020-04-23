@@ -20,8 +20,8 @@ from django.conf import settings
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+#router.register(r'users', views.UserViewSet)       disabled for security puproses
+#router.register(r'groups', views.GroupViewSet)
 router.register(r'courts', views.CourtViewSet)
 router.register(r'mapstyles', views.MapStyleViewSet)
 router.register(r'api_keys', views.MapAPIKeyViewSet)
