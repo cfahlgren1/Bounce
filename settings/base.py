@@ -33,8 +33,11 @@ ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    # Third Party Apps
     'rest_framework',
     'django_admin_material',
+
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
