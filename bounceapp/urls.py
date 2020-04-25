@@ -27,13 +27,14 @@ router.register(r'mapstyles', views.MapStyleViewSet)
 router.register(r'api_keys', views.MapAPIKeyViewSet)
 
 urlpatterns = [
+    path('admin/', admin.site.urls),  # admin site
+    path('', views.detail, name="home"),  # home page
+    path('courts/', include('courts.urls')),  # refer to court urls file
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
     path('robots.txt/', views.robots_txt), # add robots.txt link
     path ('loaderio-bfdc71f8924d72801af8766b33d8a6a4/', views.loaderio), # loaderio verification
-    path('admin/', admin.site.urls),    # admin site
-    path('', views.home, name="home"),  # home page
-    path('courts/', include('courts.urls')), # refer to court urls file
 ]
 handler500 = 'courts.views.handler500'
 if settings.DEBUG:
