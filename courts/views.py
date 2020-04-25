@@ -6,8 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 from django.template import loader
-
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, GroupSerializer, CourtSerializer, MapStyleSerializer, MapAPIKeySerializer
 
 
@@ -84,7 +83,6 @@ def detail(request):
 def handler500(request):
     return render(request, '500/index.html', status=500)
 
-
 # API METHODS
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -92,6 +90,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class MapStyleViewSet(viewsets.ModelViewSet):
     """
@@ -100,12 +99,20 @@ class MapStyleViewSet(viewsets.ModelViewSet):
     queryset = MapStyle.objects.all()
     serializer_class = MapStyleSerializer
 
+class ActiveMapStyleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = MapStyle.objects.get(active=True) # get map that is currently active
+    serializer_class = MapStyleSerializer
+
 class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class CourtViewSet(viewsets.ModelViewSet):
     """
@@ -120,3 +127,5 @@ class MapAPIKeyViewSet(viewsets.ModelViewSet):
     """
     queryset = MapAPIKey.objects.all()
     serializer_class = MapAPIKeySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
