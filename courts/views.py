@@ -69,6 +69,9 @@ def robots_txt(request):
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
+def loaderio(request):
+    return HttpResponse("loaderio-bfdc71f8924d72801af8766b33d8a6a4", content_type="text/plain")
+
 def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
     mapbox_key = MapAPIKey.objects.get(active=True) # get first api_key; only should be one, can be changed later if rotating api keys etc.
