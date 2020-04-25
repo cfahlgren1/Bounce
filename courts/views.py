@@ -73,7 +73,7 @@ def detail(request):
     style = MapStyle.objects.get(active=True) # get map that is currently active
     mapbox_key = MapAPIKey.objects.get(active=True) # get first api_key; only should be one, can be changed later if rotating api keys etc.
 
-    t = loader.get_template('courts/map/m_index.html')
+    t = loader.get_template('courts/map/index.html')
 
     c = {'map_style': style,'api_key': mapbox_key.api_key,}  # page data
     return HttpResponse(t.render(c))
