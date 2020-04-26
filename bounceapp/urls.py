@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from courts import views
 from django.conf import settings
 from rest_framework import routers
@@ -32,7 +32,7 @@ urlpatterns = [
     path('courts/', include('courts.urls')),  # refer to court urls file
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
+    path('anomaly/', views.anomaly),
     path('robots.txt/', views.robots_txt), # add robots.txt link
     path ('loaderio-bfdc71f8924d72801af8766b33d8a6a4/', views.loaderio), # loaderio verification
 ]
