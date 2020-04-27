@@ -152,7 +152,6 @@ STATICFILES_DIRS = (
     BASE_DIR + '\\courts\\templates\\courts\\map\\assets',
     BASE_DIR + '\\courts\\templates\\404\\css',
     BASE_DIR + '\\courts\\templates\\500\\assets',
-    BASE_DIR + '\\courts\\templates\\anomaly\\assets\\',
 )
 
 #  Add configuration for static files storage using whitenoise

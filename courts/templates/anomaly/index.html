@@ -1,44 +1,54 @@
 {% load static from staticfiles %}
 <!DOCTYPE html>
-<html>
-
+<html class="has-background-primary">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Bounce Database Anomalies</title>
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
-    <link rel="stylesheet" href="{% static 'styles.min.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
-
 <body>
-    <div></div>
-    <nav class="navbar navbar-light navbar-expand-md">
-        <div class="container-fluid"><a class="navbar-brand" href="#">BOUNCE</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-2"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse"
-                id="navcol-2">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="https://bouncemap.com/admin" target="_blank">A D M I N</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="https://bouncemap.com" target="_blank">View Site</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="#"></a></li>
-                    <li class="nav-item" role="presentation"></li>
-                </ul><a class="text-primary" href="https://bouncemap.com/api" target="_blank">A P I</a></div>
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Bounce
+        </h1>
+        <p class="subtitle">
+            Database <strong class = "has-text-white">Anomaly</strong> detection
+        </p>
+        <div class="columns">
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <h2 class="title">States</h2>
+                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ states_count }}'</h1>
+                        <p class = "has-text-centered">Courts with unknown states</p>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <h2 class="title">Country</h2>
+                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ country_count }}'</h1>
+                        <p class = "has-text-centered">Courts with unknown Countries</p>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <h2 class="title">All</h2>
+                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ percentage }}'</h1>
+                        <p class = "has-text-centered">Percentage of total courts that need updating</p>
+                    </div>
+                </div>
+            </div>
+            </div>
         </div>
-    </nav>
-    <div class="card">
-        <div class="card-body text-center">
-            <h4 class="card-title">COUNTRY</h4>
-            <h4 class="card-subtitle">{{ country_count }}</h4>
-            <h6 class="text-muted card-subtitle mb-2"></h6>
-        </div>
-        <div class="card-body text-center">
-            <h4 class="card-title">STATE</h4>
-            <h4 class="card-subtitle">{{ state_count }}</h4>
-            <h6 class="text-muted card-subtitle mb-2"></h6>
-        </div>
-    </div>
-    <script src="{% static 'jquery.min.js' %}"></script>
-    <script src="{% static 'bootstrap.min.js' %}"></script>
-</body>
 
+    </div>
+</section>
+</body>
 </html>

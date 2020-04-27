@@ -77,13 +77,15 @@ def loaderio(request):
 @login_required()
 def anomaly(request):
     """
-    Page to view anomoly / bad data
+    Page to view anomaly / bad data
     """
     state_count = Court.objects.filter(state="unknown").count()
     country_count = Court.objects.filter(country="unknown").count()
+    total_courts = Court.objects.count() # total courts
+    percentage = (Court.objects.filter(state="unknown") / total_courts) * 100 # get percentage of total courts needing to be fixed
 
     t = loader.get_template('anomaly/index.html')
-    c = {"state_count": state_count, 'country_count': country_count,}
+    c = {'state_count': state_count, 'country_count': country_count, 'percentage': percentage,}
     return HttpResponse(t.render(c))
 
 
