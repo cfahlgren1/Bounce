@@ -74,7 +74,6 @@ def robots_txt(request):
 def loaderio(request):
     return HttpResponse("loaderio-bfdc71f8924d72801af8766b33d8a6a4", content_type="text/plain")
 
-@login_required()
 def anomaly(request):
     """
     Page to view anomaly / bad data
@@ -82,10 +81,8 @@ def anomaly(request):
     state_count = Court.objects.filter(state="unknown").count()
     country_count = Court.objects.filter(country="unknown").count()
     total_courts = Court.objects.count() # total courts
-    percentage = (Court.objects.filter(state="unknown") / total_courts) * 100 # get percentage of total courts needing to be fixed
-
     t = loader.get_template('anomaly/index.html')
-    c = {'state_count': state_count, 'country_count': country_count, 'percentage': percentage,}
+    c = {'state_count': state_count, 'country_count': country_count, 'total': total_courts,}
     return HttpResponse(t.render(c))
 
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>Bounce Anomaly Analysis</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
@@ -22,8 +22,8 @@
                 <div class="card">
                     <div class="card-content">
                         <h2 class="title">States</h2>
-                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ states_count }}'</h1>
-                        <p class = "has-text-centered">Courts with unknown states</p>
+                        <h1 class="title has-text-centered" style="font-size:100px;">{{ state_count }}</h1>
+                        <p class = "has-text-centered">Courts with Unknown States</p>
                     </div>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                 <div class="card">
                     <div class="card-content">
                         <h2 class="title">Country</h2>
-                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ country_count }}'</h1>
-                        <p class = "has-text-centered">Courts with unknown Countries</p>
+                        <h1 class="title has-text-centered" style="font-size:100px;">{{ country_count }}</h1>
+                        <p class = "has-text-centered">Courts with Unknown Countries</p>
                     </div>
                 </div>
             </div>
@@ -40,14 +40,15 @@
                 <div class="card">
                     <div class="card-content">
                         <h2 class="title">All</h2>
-                        <h1 class="title has-text-centered" style="font-size:100px;">'{{ percentage }}'</h1>
-                        <p class = "has-text-centered">Percentage of total courts that need updating</p>
+                        <h1 class="title has-text-centered" style="font-size:100px;">
+                            {{ total }}
+                        </h1>
+                        <p class = "has-text-centered">Total number of Courts</p>
                     </div>
                 </div>
             </div>
             </div>
         </div>
-
     </div>
 </section>
 </body>
