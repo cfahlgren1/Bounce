@@ -44,24 +44,23 @@ class Point(models.Model):
 
 # Court Model stored in db
 class Court(models.Model):
-    id = models.CharField(primary_key=True, default=uuid.uuid4(),max_length=50, editable=True, unique=True)
-    name = models.CharField(max_length=100)
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=50, editable=True, unique=True)
+    name = models.CharField(max_length=100, blank=False)
     description = models.CharField(max_length=100, blank=True)
 
     # Address Information
     house_number = models.CharField(max_length=10, blank=True)
-    road = models.CharField(max_length=100, blank=True)
-    city = models.CharField(max_length=30, blank=True)
-    state = models.CharField(max_length=30, blank=True)
-    zip_code = models.CharField(max_length=10, blank=True)
+    road = models.CharField(max_length=100, blank=False)
+    city = models.CharField(max_length=30, blank=False)
+    state = models.CharField(max_length=30, blank=False)
+    zip_code = models.CharField(max_length=10, blank=False)
     county = models.CharField(max_length=30, blank=True)
-    country = models.CharField(max_length=20, blank=True)
-    coordinates = models.CharField(max_length=40, blank=True)
+    country = models.CharField(max_length=20, blank=False)
 
     # Rating Information
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
-    court_logo = models.CharField(max_length=1000, blank=True)
+    court_logo = models.ImageField(max_length=1000, blank=True)
     location = models.EmbeddedModelField(Point)
 
     objects = MongoDBManager()

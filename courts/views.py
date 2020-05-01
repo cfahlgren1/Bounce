@@ -8,6 +8,7 @@ from django.views.decorators.http import require_GET
 from django.template import loader
 from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, GroupSerializer, CourtSerializer, MapStyleSerializer, MapAPIKeySerializer
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 
 # list of mobile User Agents
@@ -76,13 +77,16 @@ def loaderio(request):
 
 def anomaly(request):
     """
-    Page to view anomaly / bad data
+    Page to view anomaly / db statistical data
     """
     state_count = Court.objects.filter(state="unknown").count()
     country_count = Court.objects.filter(country="unknown").count()
+    road_count = Court.objects.filter(road="unknown").count()
     total_courts = Court.objects.count() # total courts
+    total_users = User.objects.all().count() # total amount of users
+
     t = loader.get_template('anomaly/index.html')
-    c = {'state_count': state_count, 'country_count': country_count, 'total': total_courts,}
+    c = {'state_count': state_count, 'country_count': country_count, 'total': total_courts, 'road_count': road_count, 'users_count': total_users}
     return HttpResponse(t.render(c))
 
 
@@ -138,12 +142,11 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
 class CourtViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Court.objects.all().order_by('id')
+    queryset = Court.objects.all()
     serializer_class = CourtSerializer
 
 
