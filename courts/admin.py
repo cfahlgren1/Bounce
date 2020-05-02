@@ -25,7 +25,7 @@ class MapStyleAdmin(admin.ModelAdmin):
 @admin.register(Court)
 class CourtAdmin(ImportExportModelAdmin):
     list_display = ('id','name','road','city','state')
-    search_fields = [ 'name', 'road','city', 'state', 'coordinates']
+    search_fields = [ 'name', 'road','city', 'state', 'id']
     list_filter = ['likes','state','country']
 
 class MapAPIKeyAdmin(admin.ModelAdmin):
