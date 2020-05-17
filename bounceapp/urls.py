@@ -28,7 +28,7 @@ router.register(r'api_keys', views.MapAPIKeyViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # admin site
-    path('', views.detail, name="home"),  # home page
+    path('', views.home, name="home"),  # home page
     path('courts/', include('courts.urls')),  # refer to court urls file
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

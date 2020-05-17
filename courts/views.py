@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from .models import Court, MapStyle, MapAPIKey
+from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from .models import Court, MapStyle, MapAPIKey, Signup
 from tablib import Dataset
 from .resources import CourtResource
 from django.contrib.auth.models import User, Group
@@ -8,8 +11,8 @@ from django.views.decorators.http import require_GET
 from django.template import loader
 from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, GroupSerializer, CourtSerializer, MapStyleSerializer, MapAPIKeySerializer
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
+from .forms import EmailSignupForm
+import requests, json
 
 # list of mobile User Agents
 mobile_uas = [
@@ -25,6 +28,39 @@ mobile_uas = [
 ]
 
 mobile_ua_hints = ['SymbianOS', 'Opera Mini', 'iPhone']
+
+# MailChimp API Info for Email Subscription
+MAILCHIMP_API_KEY = settings.MAILCHIMP_API_KEY
+MAILCHIMP_DATA_CENTER = settings.MAILCHIMP_DATA_CENTER
+MAILCHIMP_EMAIL_LIST_ID = settings.MAILCHIMP_EMAIL_LIST_ID
+
+api_url = f'https://{MAILCHIMP_DATA_CENTER}.api.mailchimp.com/3.0'
+members_endpoint = f'{api_url}/lists/{MAILCHIMP_EMAIL_LIST_ID}/members'
+
+# MailChimp POST API / Subscribe Method
+def suscribe(email):
+    data = {
+        "email_address": email,
+        "status": "subscribed"
+    }
+    r = requests.post(
+        members_endpoint,
+        auth=("", MAILCHIMP_API_KEY),
+        data=json.dumps(data)
+    )
+    return r.status_code, r.json()
+
+def email_list_signup(request):
+    form = EmailSignupForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            email_signup_qs = Signup.objects.filter(email=form.instance.email)
+            if email_signup_qs.exits():
+                messages.info(request, "You are already subscribed!")
+            else:
+                suscribe(form.instance.email)
+                form.save()
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def mobileBrowser(request):
@@ -57,10 +93,17 @@ def simple_upload(request):
 
     return render(request, 'core/simple_upload.html')
 
-
 def home(request):
-    return render(request, 'courts/home/index.html')
-
+    form = EmailSignupForm()
+    if request.method == "POST":
+        email = request.POST["email"]
+        new_signup = Signup()
+        new_signup.email = email
+        new_signup.save()
+    context = {
+        'form': form
+    }
+    return render(request, 'courts/home/index.html', context)
 
 @require_GET
 def robots_txt(request):
@@ -103,7 +146,7 @@ def detail(request):
     c = {'map_style': style, 'api_key': mapbox_key.api_key, }  # page data
     return HttpResponse(t.render(c))
 
-
+# Error 500 page
 def handler500(request):
     return render(request, '500/index.html', status=500)
 

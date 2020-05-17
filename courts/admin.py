@@ -1,4 +1,4 @@
-from .models import Court, MapStyle, MapAPIKey
+from .models import Court, MapStyle, MapAPIKey, Signup
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
@@ -35,7 +35,12 @@ class MapAPIKeyAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+class SignupAdmin(admin.ModelAdmin):
+    list_display = ('email',)
+    search_fields = ['email']
+
 # Register your models here.
 admin.site.register(MapAPIKey, MapAPIKeyAdmin)
 admin.site.register(MapStyle, MapStyleAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
+admin.site.register(Signup, SignupAdmin)

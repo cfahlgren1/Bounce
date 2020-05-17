@@ -1,91 +1,288 @@
 {% load static from staticfiles %}
 <!DOCTYPE html>
-<html data-wf-domain="court-finder.webflow.io" data-wf-page="5cf530b1420081ba7d4eee45" data-wf-site="5cf530b04200815df94eee40" data-wf-status="1">
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Bounce Map | Find a basketball court near you</title>
-    <head>  <meta name="description" content="Map of outdoor basketball courts in your neighborhood"></head>
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta content="Webflow" name="generator">
-	<link href="{% static 'css1.css' %}" rel="stylesheet" type="text/css"/>
-	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript">
-	</script>
-	<script type="text/javascript">
-	WebFont.load({  google: {    families: ["Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic","Oswald:200,300,400,500,600,700","Petit Formal Script:regular"]  }});
-	</script><!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" type="text/javascript"></script><![endif]-->
-	<script type="text/javascript">
-	!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);
-	</script>
-	<link href="https://y7v4p6k4.ssl.hwcdn.net/placeholder/favicon.ico" rel="shortcut icon" type="image/x-icon">
-	<link href="https://uploads-ssl.webflow.com/img/webclip.png" rel="apple-touch-icon">
-	        <!-- Hotjar Tracking Code for https://the-bounce-app.herokuapp.com/ -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:1734323,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bounce | Find an outdoor basketball court near you!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+
+    <!--Mapbox -->
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="{% static 'mapbox.css' %}" rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.js'></script>
+
+    <meta name="description" content="Bounce is an application for basketball players looking to find high quality outdoor basketball courts.">
+
+    <!--Pre fetch and load json and cache it  -->
+    <link rel="preload" href="https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson" as="fetch">
 </head>
 <body>
-	<div class="bars-wrapper w-clearfix">
-		<div class="bar"></div>
-		<div class="bar _2"></div>
-		<div class="bar _3"></div>
-		<div class="bar _4"></div>
-		<div class="bar _5"></div>
-		<div class="bar _6"></div>
-		<div class="bar"></div>
-	</div>
-	<div class="header-section">
-		<div class="container w-container">
-			<h1 class="heading">Basketball Court Finder</h1>
-			<p class="subtitle">Find the nearest hoop in your area with Court Finder.</p>
-			<div class="sign-up-form w-form">
-				<form class="w-clearfix" data-name="Signup Form" data-redirect="/courts" id="wf-form-signup-form" name="wf-form-signup-form">
-					<input class="field w-input" data-name="Court" id="Court" maxlength="256" name="Court" placeholder="Enter Location" required="" type="text"><input class="button w-button" data-wait="Please wait..." type="submit" onclick = redirectFunction() value="Search">
-					<script>
-						function redirectFunction()
-						{
-							searchTerm = document.getElementById("Court").value // Grab search term value
-							document.location = "/courts/"
-						}
-					</script>
-				</form>
-			</div>
-			<div class="image-crop"><img alt="" sizes="(max-width: 479px) 96vw, (max-width: 767px) 86vw, (max-width: 991px) 588px, 800px" src="https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008180ae4eee4e_iphone-white-mockup.png" srcset="https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008180ae4eee4e_iphone-white-mockup-p-500x.png 500w, https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008180ae4eee4e_iphone-white-mockup-p-800x.png 800w, https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008180ae4eee4e_iphone-white-mockup.png 1909w"></div>
-		</div>
-	</div>
-	<div class="social-section">
-		<div class="w-container">
-			<h2>Spread the word about Bounce!</h2>
-			<div class="share-wrapper">
-				<div class="share-btn w-widget w-widget-gplus">
-					<div class="g-plusone" data-annotation="bubble" data-href="http://webflow.com" data-recommendations="false" data-size="tall"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="footer-section">
-		<div class="w-container">
-			<div class="w-row">
-				<div class="w-col w-col-6 w-col-small-6">
-					<div class="copyright">
-						© 2020 Bounce. All right reserved.
-					</div>
-				</div>
-				<div class="align-right w-col w-col-6 w-col-small-6">
-					<a class="social-btn w-inline-block" href="http://facebook.com/webflowapp"><img alt="" src="https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008108494eee4c_facebook-icon.svg"></a><a class="social-btn w-inline-block" href="http://twitter.com/webflowapp"><img alt="" src="https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b14200812ee24eee4a_twitter-icon.svg"></a><a class="social-btn w-inline-block" href="mailto:support@webflow.com"><img alt="" src="https://uploads-ssl.webflow.com/5cf530b04200815df94eee40/5cf530b142008185964eee4b_email-icon.svg"></a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="{% static 'js1.js' %}" type="text/javascript">
-	</script>
-	<script src="{% static 'js2.js' %}" type="text/javascript">
-	</script><!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+<section class="section has-background-info">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item"><strong>BOUNCE MAP</strong></a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasic" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/courts">
+                    View Courts
+                </a>
+                <!--                <a class="navbar-item">-->
+                <!--                    About-->
+                <!--                </a>-->
+                <!--                <a class="navbar-item">-->
+                <!--                    Contact Us-->
+                <!--                </a>-->
+            </div>
+        </div>
+        </div>
+
+        <!--            <div class="navbar-end">-->
+        <!--                <div class="navbar-item">-->
+        <!--                    <div class="buttons">-->
+        <!--                        <a class="button is-info">-->
+        <!--                            <strong>Sign up</strong>-->
+        <!--                        </a>-->
+        <!--                        <a class="button is-light">-->
+        <!--                            Log in-->
+        <!--                        </a>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        </div>
+    </nav>
+</section>
+<section>
+    <br>
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical is-parent content_box">
+            <div class="tile">
+                <div class="tile is-parent is-5 is-vertical">
+                    <article class="tile is-child box">
+                        <br>
+                        <p class="title">Bounce <i class="has-text-info is-size-4">Beta</i></p>
+                        <div class="content">
+                            <p>Bounce was created as a community of basketball players
+                                looking to find high quality outdoor basketball courts.
+                            </p>
+                            <br>
+                            <p>
+                                Current and Future Features:
+                            </p>
+                            <ul>
+                                <li>Over 45k Courts</li>
+                                <li>Multiple Map Themes</li>
+                                <li>Rate and Comment on Basketball courts</li>
+                                <li>Save your favorite courts</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="tile is-child box">
+                        <div class="container is-fluid">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title is-centered has-background-info is-size-5"><strong class="has-text-white">Join the Party</strong>
+                                    </p>
+                                </header>
+                                <div class="card-content is-info">
+                                    <div class="content">
+                                        <form action="." method="POST">
+                                            {% csrf_token %}
+                                            <p class="is-title has-text-centered">Be the first to know when the new release is out!</p>
+                                            <div class="field">
+                                                <label for="" class="label">Email</label>
+                                                <div class="control has-icons-left">
+                                                    {{ form }}
+                                                    <span class="icon is-small is-left">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="button is-primary is-centered is-fullwidth" type="submit" value="submit"><strong>Join Early Access</strong></div>
+                                        </form>
+                                    </div>
+                                    <footer class="card-footer">
+                                        <p class="card-footer-item">
+                          <span>
+                            Share on <a target="_blank" href="https://twitter.com/intent/tweet?text=Check%20out%20Bounce%2C%20a%20website%20to%20help%20you%20find%20local%20basketball%20courts%21%20%23BounceMap">Twitter</a>
+                          </span>
+                                        </p>
+                                        <p class="card-footer-item">
+                          <span>
+                            Share on <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbouncemap.com%2F&amp;src=sdkpreparse">Facebook</a>
+                          </span>
+                                        </p>
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="tile is-7 is-parent">
+                    <article class="map_box tile is-parent">
+                        <div class="tile is-11 is-child box has-ribbon">
+                            <div class="ribbon is-large is-dark">Bounce Map Demo</div>
+                            <div class="image is-square">
+                                <div id='map'></div>
+                                <script>
+                                    mapboxgl.accessToken = 'pk.eyJ1IjoiY2ZhaGxncmVuMSIsImEiOiJjazdiZWtqaDEwMDhyM2xvNTJoZDFxcjFqIn0.Chg6D1kZntCd3Gt3d0HxpA';
+                                    var map = new mapboxgl.Map({
+                                        container: 'map',
+                                        style: 'mapbox://styles/cfahlgren1/cjwhv3k951qzw1cs0q5ukvtxi',
+                                        center: [-122.431297, 37.773972],
+                                        zoom: 11
+                                    });
+
+                                    map.on('load', function () {
+                                        // Add a new source from our GeoJSON data and
+                                        // set the 'cluster' option to true. GL-JS will
+                                        // add the point_count property to your source data.
+                                        map.addSource('courts', {
+                                            type: 'geojson',
+                                            // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+                                            // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+                                            data:
+                                                'https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson',
+                                            cluster: true,
+                                            clusterMaxZoom: 14, // Max zoom to cluster points on
+                                            clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+                                        });
+
+                                        map.addLayer({
+                                            id: 'clusters',
+                                            type: 'circle',
+                                            source: 'courts',
+                                            filter: ['has', 'point_count'],
+                                            paint: {
+                                                // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+                                                // with three steps to implement three types of circles:
+                                                //   * Blue, 20px circles when point count is less than 100
+                                                //   * Yellow, 30px circles when point count is between 100 and 750
+                                                //   * Pink, 40px circles when point count is greater than or equal to 750
+                                                'circle-color': [
+                                                    'step',
+                                                    ['get', 'point_count'],
+                                                    '#FF9B71',
+                                                    100,
+                                                    '#f1f075',
+                                                    750,
+                                                    '#f28cb1'
+                                                ],
+                                                'circle-radius': [
+                                                    'step',
+                                                    ['get', 'point_count'],
+                                                    20,
+                                                    100,
+                                                    30,
+                                                    750,
+                                                    40
+                                                ]
+                                            }
+                                        });
+
+                                        map.addLayer({
+                                            id: 'cluster-count',
+                                            type: 'symbol',
+                                            source: 'courts',
+                                            filter: ['has', 'point_count'],
+                                            layout: {
+                                                'text-field': '{point_count_abbreviated}',
+                                                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                                                'text-size': 12
+                                            }
+                                        });
+
+                                        map.addLayer({
+                                            id: 'unclustered-point',
+                                            type: 'circle',
+                                            source: 'courts',
+                                            filter: ['!', ['has', 'point_count']],
+                                            paint: {
+                                                'circle-color': '#11b4da',
+                                                'circle-radius': 8,
+                                                'circle-stroke-width': 1,
+                                                'circle-stroke-color': '#fff'
+                                            }
+                                        });
+
+                                        // inspect a cluster on click
+                                        map.on('click', 'clusters', function (e) {
+                                            var features = map.queryRenderedFeatures(e.point, {
+                                                layers: ['clusters']
+                                            });
+                                            var clusterId = features[0].properties.cluster_id;
+                                            map.getSource('courts').getClusterExpansionZoom(
+                                                clusterId,
+                                                function (err, zoom) {
+                                                    if (err) return;
+
+                                                    map.easeTo({
+                                                        center: features[0].geometry.coordinates,
+                                                        zoom: zoom
+                                                    });
+                                                }
+                                            );
+                                        });
+
+                                        map.on('mouseenter', 'clusters', function () {
+                                            map.getCanvas().style.cursor = 'pointer';
+                                        });
+                                        map.on('mouseleave', 'clusters', function () {
+                                            map.getCanvas().style.cursor = '';
+                                        });
+                                    });
+                                    document.addEventListener('DOMContentLoaded', () => {
+
+                                  // Get all "navbar-burger" elements
+                                  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+                                  // Check if there are any navbar burgers
+                                  if ($navbarBurgers.length > 0) {
+
+                                    // Add a click event on each of them
+                                    $navbarBurgers.forEach( el => {
+                                      el.addEventListener('click', () => {
+
+                                        // Get the target from the "data-target" attribute
+                                        const target = el.dataset.target;
+                                        const $target = document.getElementById(target);
+
+                                        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                                        el.classList.toggle('is-active');
+                                        $target.classList.toggle('is-active');
+
+                                      });
+                                    });
+                                  }
+
+                                });
+                                </script>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Bounce</strong> hand-crafted by Caleb Fahlgren | Copyright 2020 Bounce
+        </p>
+    </div>
+</footer>
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </body>
 </html>
