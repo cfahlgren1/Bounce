@@ -68,9 +68,9 @@ class Court(models.Model):
     def __str__(self):
         return self.name + " " + self.description
 
-# Mailchimp Email Signup Model
+# MailChimp Email Signup Model
 class Signup(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

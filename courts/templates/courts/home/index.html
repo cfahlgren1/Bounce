@@ -10,11 +10,11 @@
     <!--Mapbox -->
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.js'></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
     <link href="{% static 'mapbox.css' %}" rel='stylesheet' />
-    <script src='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.js'></script>
 
-    <meta name="description" content="Bounce is an application for basketball players looking to find high quality outdoor basketball courts.">
+    <meta name="description" content="Bounce is an application for basketball players looking to find high quality outdoor basketball courts. Use our map with over 50k basketball courts to find a court location near you.">
 
     <!--Pre fetch and load json and cache it  -->
     <link rel="preload" href="https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson" as="fetch">
@@ -72,7 +72,8 @@
                         <p class="title">Bounce <i class="has-text-info is-size-4">Beta</i></p>
                         <div class="content">
                             <p>Bounce was created as a community of basketball players
-                                looking to find high quality outdoor basketball courts.
+                                looking to find high quality outdoor basketball courts.Click <a href="/courts"><b>View Courts</b></a> to
+                                visit our map of over 45k searchable courts!
                             </p>
                             <br>
                             <p>
@@ -279,7 +280,7 @@
 <footer class="footer">
     <div class="content has-text-centered">
         <p>
-            <strong>Bounce</strong> hand-crafted by Caleb Fahlgren | Copyright 2020 Bounce
+            <strong>Bounce</strong> hand-crafted by the makers of <a href="https://whatstheuv.com"><strong>WhatsTheUV</strong></a> | Copyright 2020 Bounce
         </p>
     </div>
 </footer>
