@@ -15,7 +15,7 @@ class CourtTest(TestCase):
 
     # Check to see if it was created and named correctly
     def test_court_is_named_correctly(self):
-        self.assertEquals(self.court, self.court.name + " " + self.court.description)
+        self.assertEquals(self.court.__str__(), self.court.name + " " + self.court.description)
 
     # Make sure likes data can be modified
     def test_court_likes_increases(self):
@@ -25,15 +25,16 @@ class CourtTest(TestCase):
 
     # Make sure likes data can be modified
     def test_court_likes_decreases(self):
-        self.court.likes -= 1
+        self.court.likes = 31
         self.court.save()
-        self.assertEquals(self.court.likes, 44)
+        self.court.likes -= 1
+        self.assertEquals(self.court.likes, 30)
 
     # Make sure likes data can be modified
     def test_court_name_change(self):
         self.court.name = "Other Test Name"
         self.court.save()
-        self.assertEquals(self.court, "Other Test Name "  + self.court.description)
+        self.assertEquals(self.court.__str__(), "Other Test Name "  + self.court.description)
 
     # Make sure likes data can be modified
     def test_court_address_change(self):

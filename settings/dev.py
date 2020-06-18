@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'bounce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('ENGINE'),
-        'NAME': os.environ.get('NAME'),
+        'NAME': os.environ.get('DATABASE'),
         'USER': os.environ.get('NAME'),
         'PASSWORD': os.environ.get('PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
