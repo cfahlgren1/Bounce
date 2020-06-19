@@ -20,6 +20,19 @@ environ.Env.read_env(env_file=base('.env')) # reading .env file
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# GeoDjango
+if os.name == 'nt':
+    import platform
+    OSGEO4W = r"C:\OSGeo4W"
+    if '64' in platform.architecture()[0]:
+        OSGEO4W += "64"
+    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal300'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -35,10 +48,12 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
-INSTALLED_APPS = [
+THIRD_PARTY_APPS = [
+    'django.contrib.gis',
     'django_admin_material',
     'courts',
+]
+INSTALLED_APPS = THIRD_PARTY_APPS +  [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

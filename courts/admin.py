@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.gis.admin import OSMGeoAdmin
 from .models import Court, MapStyle, MapAPIKey, Signup
 from django.contrib.admin.models import LogEntry
 
@@ -23,7 +24,7 @@ class MapStyleAdmin(admin.ModelAdmin):
     search_fields = ['description']
 
 # Customize admin page for MapStyle to show different data in columns
-class CourtAdmin(admin.ModelAdmin):
+class CourtAdmin(OSMGeoAdmin):
     list_display = ('id','name','road','city','state')
     search_fields = [ 'name', 'road','city', 'state', 'id']
     list_filter = ['likes', 'dislikes','state','country']

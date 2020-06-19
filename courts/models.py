@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models
 import uuid
 
 # Structure to support only one active map
@@ -53,6 +54,7 @@ class Court(models.Model):
     zip_code = models.CharField(max_length=10, blank=False)
     county = models.CharField(max_length=30, blank=True)
     country = models.CharField(max_length=20, blank=False)
+    location = models.PointField(blank=False, default=None)
 
     # Rating Information
     likes = models.IntegerField(default=0)
