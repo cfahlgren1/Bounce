@@ -25,9 +25,9 @@ class MapStyleAdmin(admin.ModelAdmin):
 
 # Customize admin page for MapStyle to show different data in columns
 class CourtAdmin(OSMGeoAdmin):
-    list_display = ('id','name','road','city','state')
+    list_display = ('name','road','city','state', 'location', 'category')
     search_fields = [ 'name', 'road','city', 'state', 'id']
-    list_filter = ['likes', 'dislikes','state','country']
+    list_filter = ['likes', 'dislikes','state','country', 'category']
 
 class MapAPIKeyAdmin(admin.ModelAdmin):
     list_display = ('api_key', 'active')

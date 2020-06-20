@@ -59,6 +59,7 @@ class Court(models.Model):
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     court_logo = models.ImageField(blank=True)
+    category = models.CharField(max_length=256, choices=[('Basketball', 'Basketball'), ('Soccer', 'Soccer'), ('Tennis', 'Tennis')], default='Basketball')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
