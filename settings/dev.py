@@ -49,6 +49,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 THIRD_PARTY_APPS = [
+    'graphene_django',
     'django.contrib.gis',
     'django_admin_material',
     'courts',
@@ -107,6 +108,12 @@ DATABASES = {
         'PORT': os.environ.get('PORT'),
     }
 }
+
+# GraphQL
+GRAPHENE = {
+    'SCHEMA': 'cookbook.schema.schema'
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 

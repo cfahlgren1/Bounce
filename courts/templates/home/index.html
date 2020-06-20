@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Nearby Courts</title>
+    </head>
+<body>
+    <h1>Nearby Courts</h1>
+    {% if courts %}
+    <ul>
+    {% for court in courts %}
+        <li>
+        {{ court.name }}: {{court.distance}}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
