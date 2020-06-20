@@ -1,9 +1,12 @@
 from django.test import TestCase
+from django.contrib.gis.geos import fromstr
 from ..models import Court, MapAPIKey, MapStyle
 
 class CourtTest(TestCase):
 
     def setUp(self):
+        longitude = -80.191788
+        latitude = 25.761681
         self.court = Court.objects.create(
             name="Frank Brown Rec Center",
             house_number=235,
@@ -11,6 +14,7 @@ class CourtTest(TestCase):
             city="Auburn",
             state="AL",
             country="United States",
+            location=fromstr(f'POINT({longitude} {latitude})', srid=4326)
         )
 
     # Check to see if it was created and named correctly
