@@ -1,10 +1,8 @@
 import graphene
-import bounce.courts.schema
+from courts.schema import Query as court_query
 
 
-class Query(bounce.courts.schema.Query, graphene.ObjectType):
-    # This class will inherit from multiple Queries
-    # as we begin to add more apps to our project
+class Query(court_query):
     pass
 
 schema = graphene.Schema(query=Query)

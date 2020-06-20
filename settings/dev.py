@@ -49,7 +49,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 THIRD_PARTY_APPS = [
-    'graphene_django',
     'django.contrib.gis',
     'django_admin_material',
     'courts',
@@ -61,6 +60,7 @@ INSTALLED_APPS = THIRD_PARTY_APPS +  [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -107,11 +107,6 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('PORT'),
     }
-}
-
-# GraphQL
-GRAPHENE = {
-    'SCHEMA': 'cookbook.schema.schema'
 }
 
 # Password validation

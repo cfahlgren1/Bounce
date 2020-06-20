@@ -1,25 +1,30 @@
-import graphene
+import graphene, graphql_geojson
 from graphene_django.types import DjangoObjectType
-from bounce.courts.models import Court, Signup, MapStyle, MapAPIKey
+from .models import Court, Signup, MapStyle, MapAPIKey
 
 
-class CourtType(DjangoObjectType):
+class CourtType(graphql_geojson.GeoJSONType):
     class Meta:
         model = Court
+        geojson_field = 'location'
+
 
 class SignupType(DjangoObjectType):
     class Meta:
         model = Signup
 
+
 class MapStyleType(DjangoObjectType):
     class Meta:
         model = MapStyle
+
 
 class MapAPIKeyType(DjangoObjectType):
     class Meta:
         model = MapAPIKey
 
-class Query(object):
+
+class Query(graphene.ObjectType):
     all_courts = graphene.List(CourtType)
     all_map_styles = graphene.List(MapStyleType)
     all_map_api_key = graphene.List(MapAPIKeyType)
