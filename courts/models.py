@@ -38,7 +38,6 @@ class MapAPIKey(SingleActiveModel):
     def __str__(self):
         return self.api_key
 
-
 # Court model for db structure for basketball court
 class Court(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=50, editable=True, unique=True)

@@ -26,15 +26,15 @@ class MapAPIKeyType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String())
-    all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String())
-    all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String())
+    all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
+    all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
+    all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
     all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String())
     all_map_api_key = graphene.List(MapAPIKeyType)
     all_signups = graphene.List(SignupType)
 
     # Return all basketball courts to endpoint
-    def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, **kwargs):
+    def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
         courts = Court.objects.filter(category="Basketball")
 
         # if id is given, return court with id, else none
@@ -42,6 +42,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
+            # if max is given, return only that many objects
+            if max:
+                return courts.filter(filter)[:max]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -65,10 +68,13 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
+        # if max is given, return only that many objects
+        if max:
+            return courts[:max]
         return courts
 
     # Return all tennis courts to endpoint
-    def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, **kwargs):
+    def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
         courts = Court.objects.filter(category="Tennis")
 
         # if id is given, return court with id, else none
@@ -76,6 +82,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
+            # if max is given, return only that many objects
+            if max:
+                return courts.filter(filter)[:max]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -99,10 +108,13 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
+        # if max is given, return only that many objects
+        if max:
+            return courts[:max]
         return courts
 
     # Return all soccer fields to endpoint
-    def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, **kwargs):
+    def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
         courts = Court.objects.filter(category="Soccer")
 
         # if id is given, return court with id, else none
@@ -110,6 +122,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
+            # if max is given, return only that many objects
+            if max:
+                return courts.filter(filter)[:max]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -133,6 +148,9 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
+        # if max is given, return only that many objects
+        if max:
+            return courts[:max]
         return courts
 
 
