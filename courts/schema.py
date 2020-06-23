@@ -26,15 +26,15 @@ class MapAPIKeyType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
-    all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
-    all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), max=graphene.Int())
+    all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String())
     all_map_api_key = graphene.List(MapAPIKeyType)
     all_signups = graphene.List(SignupType)
 
     # Return all basketball courts to endpoint
-    def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
+    def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
         courts = Court.objects.filter(category="Basketball")
 
         # if id is given, return court with id, else none
@@ -42,9 +42,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
-            # if max is given, return only that many objects
-            if max:
-                return courts.filter(filter)[:max]
+            # if first is given, return only that many objects
+            if first:
+                return courts.filter(filter)[:first]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -68,13 +68,17 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
-        # if max is given, return only that many objects
-        if max:
-            return courts[:max]
+        # if skip is given, skip n values
+        if skip:
+            courts = courts[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            courts = courts[:first]
         return courts
 
     # Return all tennis courts to endpoint
-    def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
+    def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
         courts = Court.objects.filter(category="Tennis")
 
         # if id is given, return court with id, else none
@@ -82,9 +86,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
-            # if max is given, return only that many objects
-            if max:
-                return courts.filter(filter)[:max]
+            # if first is given, return only that many objects
+            if first:
+                return courts.filter(filter)[:first]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -108,13 +112,17 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
-        # if max is given, return only that many objects
-        if max:
-            return courts[:max]
+        # if skip is given, skip n values
+        if skip:
+            courts = courts[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            courts = courts[:first]
         return courts
 
     # Return all soccer fields to endpoint
-    def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, max=None, **kwargs):
+    def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
         courts = Court.objects.filter(category="Soccer")
 
         # if id is given, return court with id, else none
@@ -122,9 +130,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(id__icontains=id)
             )
-            # if max is given, return only that many objects
-            if max:
-                return courts.filter(filter)[:max]
+            # if first is given, return only that many objects
+            if first:
+                return courts.filter(filter)[:first]
             return courts.filter(filter)
 
         # if name argument is given, return courts with name containing argument
@@ -148,9 +156,13 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
-        # if max is given, return only that many objects
-        if max:
-            return courts[:max]
+        # if skip is given, skip n values
+        if skip:
+            courts = courts[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            courts = courts[:first]
         return courts
 
 
