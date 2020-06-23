@@ -26,9 +26,9 @@ class MapAPIKeyType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
-    all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
-    all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    all_basketball_courts = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    all_soccer_fields = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    all_tennis_courts = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_map_api_key = graphene.List(MapAPIKeyType)
     all_signups = graphene.List(SignupType, first=graphene.Int(), skip=graphene.Int())
@@ -39,13 +39,7 @@ class Query(graphene.ObjectType):
 
         # if id is given, return court with id, else none
         if id:
-            filter = (
-                Q(id__icontains=id)
-            )
-            # if first is given, return only that many objects
-            if first:
-                return courts.filter(filter)[:first]
-            return courts.filter(filter)
+            return [Court.objects.get(pk=id)]
 
         # if name argument is given, return courts with name containing argument
         if name:
@@ -83,13 +77,7 @@ class Query(graphene.ObjectType):
 
         # if id is given, return court with id, else none
         if id:
-            filter = (
-                Q(id__icontains=id)
-            )
-            # if first is given, return only that many objects
-            if first:
-                return courts.filter(filter)[:first]
-            return courts.filter(filter)
+            return [Court.objects.get(pk=id)]
 
         # if name argument is given, return courts with name containing argument
         if name:
@@ -127,13 +115,7 @@ class Query(graphene.ObjectType):
 
         # if id is given, return court with id, else none
         if id:
-            filter = (
-                Q(id__icontains=id)
-            )
-            # if first is given, return only that many objects
-            if first:
-                return courts.filter(filter)[:first]
-            return courts.filter(filter)
+            return [Court.objects.get(pk=id)]
 
         # if name argument is given, return courts with name containing argument
         if name:

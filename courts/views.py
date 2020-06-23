@@ -6,8 +6,8 @@ from .models import Court
 
 # Create your views here.
 
-longitude = -82.782511
-latitude = 30.600094
+longitude = -85.433690
+latitude = 32.758153
 
 user_location = Point(latitude, longitude, srid=4326)
 
