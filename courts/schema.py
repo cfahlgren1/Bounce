@@ -29,9 +29,9 @@ class Query(graphene.ObjectType):
     all_basketball_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_soccer_fields = graphene.List(CourtType, id =graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_tennis_courts = graphene.List(CourtType, id=graphene.String(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
-    all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String())
+    all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_map_api_key = graphene.List(MapAPIKeyType)
-    all_signups = graphene.List(SignupType)
+    all_signups = graphene.List(SignupType, first=graphene.Int(), skip=graphene.Int())
 
     # Return all basketball courts to endpoint
     def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
@@ -167,20 +167,40 @@ class Query(graphene.ObjectType):
 
 
     # Return all map styles to endpoint
-    def resolve_all_map_styles(self, info, mapstyle=None, **kwargs):
+    def resolve_all_map_styles(self, info, mapstyle=None, first=None, skip=None, **kwargs):
+        mapstyles = MapStyle.objects.all()
+
         # if state argument is given, return courts with name containing argument
         if mapstyle:
             filter = (
                 Q(mapstyle__icontains=mapstyle)
             )
-            return MapStyle.objects.filter(filter)
+            mapstyles = MapStyle.objects.filter(filter)
 
-        return MapStyle.objects.all()
+        # if skip is given, skip n values
+        if skip:
+            mapstyles = mapstyles[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            mapstyles = mapstyles[:first]
+
+        return mapstyles
 
     # Return all map api keys to endpoint
     def resolve_all_map_api_key(self, info, **kwargs):
         return MapAPIKey.objects.all()
 
     # Return all user signups to endpoint
-    def resolve_all_signups(self, info, **kwargs):
-        return Signup.objects.all()
+    def resolve_all_signups(self, info, first=None, skip=None, **kwargs):
+        signups = Signup.objects.all()
+
+        # if skip is given, skip n values
+        if skip:
+            signups = signups[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            signups = signups[:first]
+
+        return signups
