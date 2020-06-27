@@ -61,6 +61,7 @@ INSTALLED_APPS = THIRD_PARTY_APPS +  [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    "graphql_auth"
 ]
 
 MIDDLEWARE = [
@@ -150,9 +151,25 @@ GRAPHENE = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
+    "graphql_auth.backends.GraphQLAuthBackend",
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+GRAPHQL_JWT = {
+    #...
+    "JWT_ALLOW_ANY_CLASSES": [
+        "graphql_auth.mutations.Register",
+        "graphql_auth.mutations.VerifyAccount",
+        "graphql_auth.mutations.ResendActivationEmail",
+        "graphql_auth.mutations.SendPasswordResetEmail",
+        "graphql_auth.mutations.PasswordReset",
+        "graphql_auth.mutations.ObtainJSONWebToken",
+        "graphql_auth.mutations.VerifyToken",
+        "graphql_auth.mutations.RefreshToken",
+        "graphql_auth.mutations.RevokeToken",
+        "graphql_auth.mutations.VerifySecondaryEmail",
+    ],
+}
 
 
 # Static files (CSS, JavaScript, Images)
@@ -161,6 +178,10 @@ AUTHENTICATION_BACKENDS = [
 STATIC_URL = '/static/'
 PROJECT_ROOT = os.path.join(os.path.abspath(__file__), "..\\..")
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+
+# Send emails to standard output
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
