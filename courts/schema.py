@@ -3,6 +3,7 @@ from graphql import GraphQLError
 from django.db.models import Q
 from graphene_django.types import DjangoObjectType
 from django.contrib.gis.geos import Point
+from django.contrib.gis.db.models.functions import Distance
 from .models import Court, Signup, MapStyle, MapAPIKey
 
 
@@ -29,6 +30,7 @@ class MapAPIKeyType(DjangoObjectType):
 
 class Query(graphene.ObjectType):
     all_basketball_courts = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
+    closest_courts_to = graphene.List(CourtType, lat=graphene.Float(), lng=graphene.Float(), category=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_soccer_fields = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_tennis_courts = graphene.List(CourtType, id=graphene.ID(), name=graphene.String(), city=graphene.String(), state=graphene.String(), first=graphene.Int(), skip=graphene.Int())
     all_map_styles = graphene.List(MapStyleType, mapstyle=graphene.String(), first=graphene.Int(), skip=graphene.Int())
@@ -72,6 +74,21 @@ class Query(graphene.ObjectType):
         if first:
             courts = courts[:first]
         return courts
+
+    def resolve_closest_courts_to(self, info, lat, lng, category, first=None, skip=None, **kwargs):
+        searched_location = Point(lat, lng, srid=4326)
+        courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance').filter(category=category)
+
+        # if skip is given, skip n values
+        if skip:
+            courts = courts[skip:]
+
+        # if first is given, return only that many objects
+        if first:
+            courts = courts[:first]
+
+        return courts
+
 
     # Return all tennis courts to endpoint
     def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
