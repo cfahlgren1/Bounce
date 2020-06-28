@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.views import generic
 from django.contrib.gis.geos import fromstr, Point
 from django.contrib.gis.db.models.functions import Distance
-from django.contrib.auth.mixins import LoginRequiredMixin
 from graphene_django.views import GraphQLView
 from .models import Court
 
@@ -22,6 +21,6 @@ class Home(generic.ListView):
     template_name = 'home/index.html'
 
 
-class PrivateGraphQLView(LoginRequiredMixin, GraphQLView):
+class PrivateGraphQLView(GraphQLView):
     pass
 
