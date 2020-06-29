@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.gis.geos import fromstr, Point
 from django.contrib.gis.db.models.functions import Distance
-from graphene_django.views import GraphQLView
 from .models import Court
 
 # Create your views here.
@@ -19,8 +19,4 @@ class Home(generic.ListView):
     user_location)
     ).order_by('distance')[0:6]
     template_name = 'home/index.html'
-
-
-class PrivateGraphQLView(GraphQLView):
-    pass
 

@@ -42,6 +42,11 @@ class Query(graphene.ObjectType):
 
     # Return all basketball courts to endpoint
     def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         courts = Court.objects.filter(category="Basketball")
 
         # if id is given, return court with id, else none
@@ -83,6 +88,11 @@ class Query(graphene.ObjectType):
         return courts
 
     def resolve_closest_courts_to(self, info, lat, lng, category, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         searched_location = Point(lat, lng, srid=4326)
         courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance').filter(category=category)
 
@@ -99,9 +109,13 @@ class Query(graphene.ObjectType):
 
         return courts
 
-
     # Return all tennis courts to endpoint
     def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         courts = Court.objects.filter(category="Tennis")
 
 
@@ -144,6 +158,11 @@ class Query(graphene.ObjectType):
 
     # Return all soccer fields to endpoint
     def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         courts = Court.objects.filter(category="Soccer")
 
         # if id is given, return court with id, else none
@@ -186,6 +205,11 @@ class Query(graphene.ObjectType):
 
     # Return all map styles to endpoint
     def resolve_all_map_styles(self, info, mapstyle=None, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         mapstyles = MapStyle.objects.all()
 
         # if state argument is given, return courts with name containing argument
@@ -210,10 +234,20 @@ class Query(graphene.ObjectType):
 
     # Return all map api keys to endpoint
     def resolve_all_map_api_key(self, info, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         return gql_optimizer.query(MapAPIKey.objects.all(), info)
 
     # Return all user signups to endpoint
     def resolve_all_signups(self, info, first=None, skip=None, **kwargs):
+        # use authentication with jwt tokens
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('Not logged in!')
+
         signups = gql_optimizer.query(Signup.objects.all(), info)
 
         # if skip is given, skip n values
@@ -271,12 +305,10 @@ class CreateCourt(graphene.Mutation):
         raise GraphQLError("Court with that location already exists!")
 
 
-
 class Mutation(graphene.ObjectType):
     create_court = CreateCourt.Field()
 
     # GraphQL Authentication
-    register = mutations.Register.Field()
     verify_account = mutations.VerifyAccount.Field()
     resend_activation_email = mutations.ResendActivationEmail.Field()
     send_password_reset_email = mutations.SendPasswordResetEmail.Field()
