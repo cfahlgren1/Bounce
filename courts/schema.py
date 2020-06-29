@@ -1,6 +1,7 @@
 import graphene, graphql_geojson, uuid
 from graphql import GraphQLError
 from graphql_auth.schema import UserQuery, MeQuery
+import graphene_django_optimizer as gql_optimizer
 from graphql_auth import mutations
 from django.db.models import Q
 from graphene_django.types import DjangoObjectType
@@ -68,6 +69,9 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
+        # optimize query with select_related and prefetch_related
+        courts = gql_optimizer.query(courts,info)
+
         # if skip is given, skip n values
         if skip:
             courts = courts[skip:]
@@ -75,11 +79,15 @@ class Query(graphene.ObjectType):
         # if first is given, return only that many objects
         if first:
             courts = courts[:first]
+
         return courts
 
     def resolve_closest_courts_to(self, info, lat, lng, category, first=None, skip=None, **kwargs):
         searched_location = Point(lat, lng, srid=4326)
         courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance').filter(category=category)
+
+        # optimize query with select_related and prefetch_related
+        courts = gql_optimizer.query(courts, info)
 
         # if skip is given, skip n values
         if skip:
@@ -95,6 +103,7 @@ class Query(graphene.ObjectType):
     # Return all tennis courts to endpoint
     def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
         courts = Court.objects.filter(category="Tennis")
+
 
         # if id is given, return court with id, else none
         if id:
@@ -120,6 +129,9 @@ class Query(graphene.ObjectType):
                 Q(state__icontains=state)
             )
             courts = courts.filter(filter)
+
+        # optimize query with select_related and prefetch_related
+        courts = gql_optimizer.query(courts, info)
 
         # if skip is given, skip n values
         if skip:
@@ -159,6 +171,9 @@ class Query(graphene.ObjectType):
             )
             courts = courts.filter(filter)
 
+        # optimize query with select_related and prefetch_related
+        courts = gql_optimizer.query(courts, info)
+
         # if skip is given, skip n values
         if skip:
             courts = courts[skip:]
@@ -180,6 +195,9 @@ class Query(graphene.ObjectType):
             )
             mapstyles = MapStyle.objects.filter(filter)
 
+        # optimize query with select_related and prefetch_related
+        mapstyles = gql_optimizer.query(mapstyles, info)
+
         # if skip is given, skip n values
         if skip:
             mapstyles = mapstyles[skip:]
@@ -192,11 +210,11 @@ class Query(graphene.ObjectType):
 
     # Return all map api keys to endpoint
     def resolve_all_map_api_key(self, info, **kwargs):
-        return MapAPIKey.objects.all()
+        return gql_optimizer.query(MapAPIKey.objects.all(), info)
 
     # Return all user signups to endpoint
     def resolve_all_signups(self, info, first=None, skip=None, **kwargs):
-        signups = Signup.objects.all()
+        signups = gql_optimizer.query(Signup.objects.all(), info)
 
         # if skip is given, skip n values
         if skip:
