@@ -15,7 +15,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class CourtSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Court
-        fields = ['id', 'name', 'road','city', 'state', 'county', 'zip_code', 'county', 'country', 'likes', 'dislikes', 'location']
+        fields = ['id', 'name', 'house_number', 'road', 'city', 'state', 'county', 'zip_code', 'county', 'country', 'likes', 'dislikes', 'location']
 
 class MapStyleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
