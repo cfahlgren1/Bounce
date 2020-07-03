@@ -83,7 +83,12 @@ class Query(graphene.ObjectType):
 
         # if first is given, return only that many objects
         if first:
-            courts = courts[:first]
+            if not first > 250:
+                courts = courts[:first]
+            else:
+                raise GraphQLError('Cannot return more than 250 courts')
+        else:
+            courts = courts[:50]
 
         return courts
 
@@ -105,7 +110,12 @@ class Query(graphene.ObjectType):
 
         # if first is given, return only that many objects
         if first:
-            courts = courts[:first]
+            if not first > 250:
+                courts = courts[:first]
+            else:
+                raise GraphQLError('Cannot return more than 250 courts')
+        else:
+            courts = courts[:50]
 
         return courts
 
@@ -153,7 +163,13 @@ class Query(graphene.ObjectType):
 
         # if first is given, return only that many objects
         if first:
-            courts = courts[:first]
+            if not first > 250:
+                courts = courts[:first]
+            else:
+                raise GraphQLError('Cannot return more than 250 courts')
+        else:
+            courts = courts[:50]
+
         return courts
 
     # Return all soccer fields to endpoint
@@ -199,7 +215,13 @@ class Query(graphene.ObjectType):
 
         # if first is given, return only that many objects
         if first:
-            courts = courts[:first]
+            if not first > 250:
+                courts = courts[:first]
+            else:
+                raise GraphQLError('Cannot return more than 250 courts')
+        else:
+            courts = courts[:50]
+
         return courts
 
 
