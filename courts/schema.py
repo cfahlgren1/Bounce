@@ -331,8 +331,23 @@ class CreateCourt(graphene.Mutation):
             )
         raise GraphQLError("Court with that location already exists!")
 
+class CourtExists(graphene.Mutation):
+    exists = graphene.Boolean()
+
+    class Arguments:
+        lat = graphene.Float(required=True)
+        lng = graphene.Float(required=True)
+
+    def mutate(self, info, lat=None, lng=None):
+        id = (str(lat) + str(lng))
+        id = hashlib.md5(id.encode())
+        id = id.hexdigest()
+        return CourtExists(exists = Court.objects.filter(id=id).exists())
+
+
 class Mutation(graphene.ObjectType):
     create_court = CreateCourt.Field()
+    court_exists = CourtExists.Field()
 
     # GraphQL Authentication
     verify_account = mutations.VerifyAccount.Field()
