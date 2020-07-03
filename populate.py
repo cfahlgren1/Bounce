@@ -1,19 +1,19 @@
 # importing the requests library
 import requests, json, uuid
-import urllib.request, requests, json, time, sys
+import urllib.request, requests, json, time, sys, hashlib
+
 
 def sendData():
-
-    locationIQ = 8520
+    locationIQ = 9980
     mapquest = 11000
-    x=0
+    x = 0
     duplicate_count = 0
     locationIQ_Array = ['7bfcc511b515eb']
 
     id = ""
     coordinates = []
     url2 = 'https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson'
-    x=0
+    x = 0
 
     with urllib.request.urlopen(url2) as url:
         data = json.loads(url.read().decode())
@@ -30,7 +30,7 @@ def sendData():
                                 if (k == "coordinates"):
                                     coordinates = v
                     x += 1
-                    if x > 7473:
+                    if x > 16000 and courtExists(coordinates[1], coordinates[0]) is False:
                         url = "https://us1.locationiq.com/v1/reverse.php"
                         iq = '7bfcc511b515eb'  # Pick a random item from the list
                         data = {
@@ -153,7 +153,8 @@ def sendData():
                                                     state = "adminArea3"
                                 mapquest -= 1
 
-                            if (name == 'Basketball Court' or name == 'unknown' or name.lower() == 'basket ball' or name == 'court' or name.lower() == 'basketball'):
+                            if (
+                                    name == 'Basketball Court' or name == 'unknown' or name.lower() == 'basket ball' or name == 'court' or name.lower() == 'basketball'):
                                 if (road != 'unknown'):
                                     if (house_number != "unknown"):
                                         name = house_number + " " + road
@@ -167,7 +168,8 @@ def sendData():
 
                             locationIQ -= 1
 
-                            if (country == 'unknown') or (city == 'unknown') or (road == 'unknown') or (state == 'unknown'):
+                            if (country == 'unknown') or (city == 'unknown') or (road == 'unknown') or (
+                                    state == 'unknown'):
                                 print("could not insert \t " + id)
                             else:
                                 court = {
@@ -180,14 +182,23 @@ def sendData():
                                     'Authorization': 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJhcGlkYXBpIiwiZXhwIjoxNTkzNDQzNjcwLCJvcmlnSWF0IjoxNTkzNDQzMzcwfQ.HbsHQKeCSlciM4g-LnYb_E1IL2q_NIlweZlf1f47BV4'}
                                 r = requests.post(url, json=court, headers=headers)
                                 print(x, "Status", r.status_code, "Added: " + name, court)
-                                time.sleep(0.9)  # sleep to avoid rate limiting api
                         else:
                             sys.exit(0)
+
                     else:
-                        print("Document Exists: " + str(coordinates))
+                        try:
+                            lat = coordinates[1]
+                            lng = coordinates[0]
+                            id = (str(lat) + str(lng))
+                            id = hashlib.md5(id.encode())
+                            id = id.hexdigest()
+                            print (id, "already exists!", coordinates)
+                        except Exception:
+                            pass
+
 
 def getDataAPI():
-    offset = 1000
+    offset = 2371
     x = 1
     while True:
         # api-endpoint
@@ -213,15 +224,27 @@ def getDataAPI():
             longitude = court.get("location").split(",")[0]
             latitude = court.get("location").split(",")[1]
 
-            court = {'query': 'mutation { createCourt(name: ' + '\"' + name + '\"' + ', category: "Basketball", lat: ' + str(
-                latitude) + ', lng: ' + str(
-                longitude) + ', road: ' + '\"' + road + '\"' + ', city: ' + '\"' + city + '\"' + ', state: ' + '\"' + state + '\"' + ', country: ' + '\"' + country + '\"' + ', county: ' + '\"' + county + '\"' + ', zipCode: ' + '\"' + str(
-                zip_code) + '\"' + ', houseNumber: ' + '\"' + house_number + '\"' + ') { name} }'}
             url = 'http://localhost:8000/graphql/'
-            headers = {'Authorization': 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJhcGlkYXBpIiwiZXhwIjoxNTkzNDQzNjcwLCJvcmlnSWF0IjoxNTkzNDQzMzcwfQ.HbsHQKeCSlciM4g-LnYb_E1IL2q_NIlweZlf1f47BV4'}
+            headers = {
+                'Authorization': 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJhcGlkYXBpIiwiZXhwIjoxNTkzNDQzNjcwLCJvcmlnSWF0IjoxNTkzNDQzMzcwfQ.HbsHQKeCSlciM4g-LnYb_E1IL2q_NIlweZlf1f47BV4'}
             r = requests.post(url, json=court, headers=headers)
-            print(x, "Status",r.status_code, "Added: " + name, court)
+            print(x, "Status", r.status_code, "Added: " + name, court)
             x += 1
         offset += 100
 
+
+# method to return if court exists from graphql api
+def courtExists(latitude, longitude):
+    court = {'query': 'mutation { courtExists(lat: ' + str(latitude) + ', lng: ' + str(longitude) + ') { exists} }'}
+    url = 'http://localhost:8000/graphql/'
+    headers = {
+        'Authorization': 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJhcGlkYXBpIiwiZXhwIjoxNTkzNDQzNjcwLCJvcmlnSWF0IjoxNTkzNDQzMzcwfQ.HbsHQKeCSlciM4g-LnYb_E1IL2q_NIlweZlf1f47BV4'}
+    r = requests.post(url, json=court, headers=headers)
+    if r.status_code == 200:
+        response = json.loads(r.text)
+        return (response.get('data').get('courtExists').get('exists'))
+    return False
+
+
+sendData()
 getDataAPI()
