@@ -5,15 +5,12 @@
         <title>Nearby Courts</title>
     </head>
 <body>
-    <h1>Nearby Courts</h1>
-    {% if courts %}
-    <ul>
-    {% for court in courts %}
-        <li>
-        {{ court.name }}: {{court.distance}}
-        </li>
+
+<script>
+    {% for court in json_array %}
+    var jsonObject = JSON.parse('{{ court | escapejs }}');
+    console.log(jsonObject.results);
     {% endfor %}
-    </ul>
-    {% endif %}
+</script>
 </body>
 </html>
