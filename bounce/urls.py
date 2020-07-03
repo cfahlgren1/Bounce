@@ -23,5 +23,6 @@ from courts import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
-    path('', views.Home.as_view()),
+    path('', views.detail, name='detail'),
+    path('anomaly/', views.anomaly, name='anomaly')
 ]

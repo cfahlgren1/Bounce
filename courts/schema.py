@@ -1,4 +1,4 @@
-import graphene, graphql_geojson, uuid
+import graphene, graphql_geojson, uuid, hashlib
 from graphql import GraphQLError
 from graphql_auth.schema import UserQuery, MeQuery
 import graphene_django_optimizer as gql_optimizer
@@ -269,6 +269,7 @@ class CreateCourt(graphene.Mutation):
     city = graphene.String()
     zip_code = graphene.String()
     state = graphene.String()
+    county = graphene.String()
     country = graphene.String()
 
     class Arguments:
@@ -279,16 +280,19 @@ class CreateCourt(graphene.Mutation):
         city = graphene.String(required=True)
         zip_code = graphene.String(required=True)
         state = graphene.String(required=True)
+        county = graphene.String()
         country = graphene.String()
         lng = graphene.Float(required=True)
         lat = graphene.Float(required=True)
         category = graphene.String()
 
-    def mutate(self, info, name, description="", house_number="", road=None, city=None, zip_code=None, state=None, country=None, lng=None, lat=None, category="Basketball"):
+    def mutate(self, info, name, description="", house_number="", road=None, city=None, zip_code=None, state=None, county=None, country=None, lng=None, lat=None, category="Basketball"):
         location = Point(lat, lng, srid=4326)
         # check if court already exists
         if Court.objects.filter(location=location).count() == 0:
-            court = Court(id=uuid.uuid4(), name=name, description=description, house_number=house_number, road=road, city=city, zip_code=zip_code, state=state, country=country, location=location, category=category)
+            id = (str(lat) + str(lng))
+            id = hashlib.md5(id.encode())
+            court = Court(id=id.hexdigest(), name=name, description=description, house_number=house_number, road=road, city=city, county=county, zip_code=zip_code, state=state, country=country, location=location, category=category)
             court.save()
 
             return CreateCourt(
@@ -300,10 +304,10 @@ class CreateCourt(graphene.Mutation):
                 city=court.city,
                 zip_code=court.zip_code,
                 state=court.state,
+                county=court.county,
                 country=court.country,
             )
         raise GraphQLError("Court with that location already exists!")
-
 
 class Mutation(graphene.ObjectType):
     create_court = CreateCourt.Field()

@@ -47,11 +47,11 @@ class Court(models.Model):
     # Address Information
     house_number = models.CharField(max_length=10, blank=True)
     road = models.CharField(max_length=100, blank=False)
-    city = models.CharField(max_length=30, blank=False)
-    state = models.CharField(max_length=30, blank=False)
+    city = models.CharField(max_length=100, blank=False)
+    state = models.CharField(max_length=100, blank=False)
     zip_code = models.CharField(max_length=10, blank=False)
-    county = models.CharField(max_length=30, blank=True)
-    country = models.CharField(max_length=20, blank=False)
+    county = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=False)
     location = models.PointField(blank=False, default=None)
 
     # Rating Information
