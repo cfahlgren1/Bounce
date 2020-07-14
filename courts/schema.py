@@ -14,6 +14,7 @@ class CourtType(graphql_geojson.GeoJSONType):
     class Meta:
         model = Court
         geojson_field = 'location'
+    count = graphene.Int()
 
 
 class SignupType(DjangoObjectType):
@@ -47,11 +48,11 @@ class Query(graphene.ObjectType):
         if user.is_anonymous:
             raise GraphQLError('Not logged in!')
 
-        courts = Court.objects.filter(category="Basketball")
-
         # if id is given, return court with id, else none
         if id:
             return [Court.objects.get(pk=id)]
+
+        courts = Court.objects.filter(category="Basketball")
 
         # if name argument is given, return courts with name containing argument
         if name:
@@ -99,7 +100,7 @@ class Query(graphene.ObjectType):
             raise GraphQLError('Not logged in!')
 
         searched_location = Point(lat, lng, srid=4326)
-        courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance').filter(category=category)
+        courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance')
 
         # optimize query with select_related and prefetch_related
         courts = gql_optimizer.query(courts, info)
@@ -117,6 +118,8 @@ class Query(graphene.ObjectType):
         else:
             courts = courts[:50]
 
+        for court in courts:
+            print (court.name, court.state, court.distance/1609.34)
         return courts
 
     # Return all tennis courts to endpoint
@@ -126,12 +129,11 @@ class Query(graphene.ObjectType):
         if user.is_anonymous:
             raise GraphQLError('Not logged in!')
 
-        courts = Court.objects.filter(category="Tennis")
-
-
         # if id is given, return court with id, else none
         if id:
             return [Court.objects.get(pk=id)]
+
+        courts = Court.objects.filter(category="Tennis")
 
         # if name argument is given, return courts with name containing argument
         if name:
@@ -179,11 +181,11 @@ class Query(graphene.ObjectType):
         if user.is_anonymous:
             raise GraphQLError('Not logged in!')
 
-        courts = Court.objects.filter(category="Soccer")
-
         # if id is given, return court with id, else none
         if id:
             return [Court.objects.get(pk=id)]
+
+        courts = Court.objects.filter(category="Soccer")
 
         # if name argument is given, return courts with name containing argument
         if name:
@@ -342,7 +344,7 @@ class CourtExists(graphene.Mutation):
         id = (str(lat) + str(lng))
         id = hashlib.md5(id.encode())
         id = id.hexdigest()
-        return CourtExists(exists = Court.objects.filter(id=id).exists())
+        return CourtExists(exists=Court.objects.filter(id=id).exists())
 
 
 class Mutation(graphene.ObjectType):

@@ -30,7 +30,7 @@ def sendData():
                                 if (k == "coordinates"):
                                     coordinates = v
                     x += 1
-                    if x > 16000 and courtExists(coordinates[1], coordinates[0]) is False:
+                    if x > 46406 and courtExists(coordinates[1], coordinates[0]) is False:
                         url = "https://us1.locationiq.com/v1/reverse.php"
                         iq = '7bfcc511b515eb'  # Pick a random item from the list
                         data = {
@@ -153,8 +153,7 @@ def sendData():
                                                     state = "adminArea3"
                                 mapquest -= 1
 
-                            if (
-                                    name == 'Basketball Court' or name == 'unknown' or name.lower() == 'basket ball' or name == 'court' or name.lower() == 'basketball'):
+                            if (name == 'Basketball Court' or name == 'unknown' or name.lower() == 'basket ball' or name == 'court' or name.lower() == 'basketball'):
                                 if (road != 'unknown'):
                                     if (house_number != "unknown"):
                                         name = house_number + " " + road
@@ -224,6 +223,7 @@ def getDataAPI():
             longitude = court.get("location").split(",")[0]
             latitude = court.get("location").split(",")[1]
 
+            court = {'query': 'mutation { createCourt(name: ' + '\"' + name + '\"' + ', category: "Basketball", lat: ' + str(latitude) + ', lng: ' + str(longitude) + ', road: ' + '\"' + road + '\"' + ', city: ' + '\"' + city + '\"' + ', state: ' + '\"' + state + '\"' + ', country: ' + '\"' + country + '\"' + ', county: ' + '\"' + county + '\"' + ', zipCode: ' + '\"' + str(zip_code) + '\"' + ', houseNumber: ' + '\"' + house_number + '\"' + ') { name} }'}
             url = 'http://localhost:8000/graphql/'
             headers = {
                 'Authorization': 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJhcGlkYXBpIiwiZXhwIjoxNTkzNDQzNjcwLCJvcmlnSWF0IjoxNTkzNDQzMzcwfQ.HbsHQKeCSlciM4g-LnYb_E1IL2q_NIlweZlf1f47BV4'}
@@ -232,6 +232,40 @@ def getDataAPI():
             x += 1
         offset += 100
 
+def getDatafromGIST():
+    x = 1
+    while True:
+        # api-endpoint
+        URL = "https://gist.githubusercontent.com/cfahlgren1/38167a6c7befae3549ad5815ff4f377f/raw/7b6e0c015e248da0fe7af00198f2022870fc47e7/court_info"
+
+        PARAMS = {}
+        r = requests.get(url=URL, params=PARAMS)
+
+        # extracting data in json format
+        data = r.json()
+        if len(data['results']) == 0:
+            break
+        results = data.get('results')
+
+        for court in results:
+            house_number = court.get("house_number")
+            name = court.get("name")
+            road = court.get("road")
+            city = court.get("city")
+            state = court.get("state")
+            county = court.get("county")
+            zip_code = court.get("zip_code")
+            country = court.get("country")
+            longitude = court.get("coordinates").split(",")[0]
+            latitude = court.get("coordinates").split(",")[1]
+
+            if courtExists(latitude,longitude) is False:
+                court = {'query': 'mutation { createCourt(name: ' + '\"' + name + '\"' + ', category: "Basketball", lat: ' + str(latitude) + ', lng: ' + str(longitude) + ', road: ' + '\"' + road + '\"' + ', city: ' + '\"' + city + '\"' + ', state: ' + '\"' + state + '\"' + ', country: ' + '\"' + country + '\"' + ', county: ' + '\"' + county + '\"' + ', zipCode: ' + '\"' + str(zip_code) + '\"' + ', houseNumber: ' + '\"' + house_number + '\"' + ') { name} }'}
+
+                url = 'http://localhost:8000/graphql/'
+                # = requests.post(url, json=court)
+                print(x, "Status", "Added: " + name, court)
+                x += 1
 
 # method to return if court exists from graphql api
 def courtExists(latitude, longitude):
@@ -245,6 +279,4 @@ def courtExists(latitude, longitude):
         return (response.get('data').get('courtExists').get('exists'))
     return False
 
-
-sendData()
-getDataAPI()
+getDatafromGIST()

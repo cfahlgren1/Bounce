@@ -1,5 +1,8 @@
+import json
 from django.test import TestCase
 from django.contrib.gis.geos import fromstr
+from graphene_django.utils.testing import GraphQLTestCase
+from bounce.schema import schema
 from ..models import Court, MapAPIKey, MapStyle
 
 class CourtTest(TestCase):

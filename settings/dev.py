@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import django_heroku
 import os
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 base = environ.Path(__file__) - 2 # two folders back (/a/b/ - 2 = /)
 environ.Env.read_env(env_file=base('.env')) # reading .env file
@@ -44,8 +46,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['bounce-court-finder.herokuapp.com', '127.0.0.1', 'localhost', 'bouncemap.com']
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -60,6 +61,8 @@ INSTALLED_APPS = THIRD_PARTY_APPS +  [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'import_export',
     'graphene_django',
     "graphql_auth"
 ]
@@ -171,6 +174,11 @@ GRAPHQL_JWT = {
     ],
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -179,9 +187,35 @@ STATIC_URL = '/static/'
 PROJECT_ROOT = os.path.join(os.path.abspath(__file__), "..\\..")
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
+# Extra lookup directories for collectstatic to find static files
+STATICFILES_DIRS = (
+    BASE_DIR + '\\courts\\templates\\courts\\home\\assets',
+    BASE_DIR + '\\courts\\templates\\courts\\map\\assets',
+    BASE_DIR + '\\courts\\templates\\404\\css',
+    BASE_DIR + '\\courts\\templates\\500\\assets',
+)
 
 # Send emails to standard output
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+import dj_database_url
+prod_db  =  dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(prod_db)
+
+django_heroku.settings(locals(),databases=False)
+
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_DSN'),
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
+MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
+MAILCHIMP_DATA_CENTER = os.environ.get('MAILCHIMP_API_KEY')
+MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_API_KEY')
