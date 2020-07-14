@@ -1,0 +1,488 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet'/>
+    <link href="{% static 'main_m.css' %}" rel="stylesheet" type="text/css">
+    <link rel='stylesheet' href="{% static 'mapbox-gl-geocoder.css' %}" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
+
+    <!--Pre fetch and load json and cache it  -->
+    <link rel="preload" href="https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson" as="fetch">
+    <link rel="preload" href="https://gist.githubusercontent.com/cfahlgren1/38167a6c7befae3549ad5815ff4f377f/raw/7b6e0c015e248da0fe7af00198f2022870fc47e7/court_info" as="fetch">
+    <meta charset="UTF-8">
+
+        <!-- Hotjar Tracking Code for https://the-bounce-app.herokuapp.com/ -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1734323,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+
+    <title>Bounce Map | Find a basketball court near you</title>
+    <head>  <meta name="description" content="Map of outdoor basketball courts in your neighborhood"></head>
+</head>
+<body>
+
+<div class='sidebar'>
+    <div class='heading'>
+        <h1>COURTS</h1>
+    </div>
+    <div id='listings' class='listings'></div>
+</div>
+
+<div id='map' class='map pad2'></div>
+<div id='geocoder' class='geocoder'></div>
+<style>
+    .geocoder {
+    z-index: 1;
+    top: 4%;
+    width: 70%;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.mapboxgl-ctrl-geocoder {
+        min-width: 100%;
+}
+</style>
+<script>
+// Select the listing container in the HTML and append a div
+// with the class 'item' for each store
+var listings = document.getElementById('listings');
+var listing = listings.appendChild(document.createElement('div'));
+listing.className = 'item';
+listing.id = 'listing-' + 0;
+// Create a new link with the class 'title' for each store
+// and fill it with the store address
+var link = listing.appendChild(document.createElement('a'));
+link.className = 'initial';
+link.dataPosition = 0;
+link.innerHTML = "Search an address to view courts";
+
+getCourtInfo(); // create web worker and download json
+
+mapboxgl.accessToken = '{{ api_key }}';
+// This adds the map to your page
+var map = new mapboxgl.Map({
+    // container id specified in the HTML
+    container: 'map',
+    trackUserLocation: true,
+    hash: true,
+
+    // grab map_style from database
+    style: '{{ map_style.map_style }}',
+
+    // initial position in [lon, lat] format
+    center: [-85.474220, 32.610820], // Where to initially center map
+    // initial zoom
+    zoom: 12
+});
+
+//define geojson
+all_courts = {};
+var w; // web worker
+// disable map rotation using right click + drag
+map.dragRotate.disable();
+
+map.on('load', function() {
+    // Add a new source from our GeoJSON data and set the
+    // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+    map.addSource("courts", {
+        type: "geojson",
+        // Point to GeoJSON data. This example visualizes all court data
+        data: "https://gist.githubusercontent.com/cfahlgren1/0e36f85d14138b9298a3f20a06d0050e/raw/38b4102fa593133c0a2b74312cd5177b0fbd1039/courts.geojson",
+        cluster: true,
+        clusterMaxZoom: 11, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+    });
+
+    // add cluster layer
+    map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "courts",
+        filter: ["has", "point_count"],
+        paint: {
+            // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+            // with three steps to implement three types of circles:
+            //   * Blue, 20px circles when point count is less than 100
+            //   * Yellow, 30px circles when point count is between 100 and 750
+            //   * Pink, 40px circles when point count is greater than or equal to 750
+            "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#FF9B71",
+                100,
+                "#f1f075",
+                750,
+                "#f28cb1"
+            ],
+            "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                20,
+                100,
+                30,
+                750,
+                40
+            ]
+        }
+    });
+
+    // add cluster count # to layer
+    map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "courts",
+        filter: ["has", "point_count"],
+        layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+        }
+    });
+
+    // add unclustered point layer when zoomed in
+    map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "courts",
+        filter: ["!", ["has", "point_count"]],
+        paint: {
+            "circle-color": "#ff6666",
+            "circle-radius": 8,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+    var geocoder = new MapboxGeocoder({ // Geocoder Search Box for Address etc
+        accessToken: mapboxgl.accessToken,
+        marker: true, // do not create marker where search result is
+        countries: 'us', // limit search to the unites states
+        mapboxgl: mapboxgl
+    });
+
+    // when user clicks on geocoder result, save coordinates for future use
+    geocoder.on('result', function(ev) {
+        var searchResult = ev.result.geometry.coordinates;
+        searchedFeature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": searchResult
+            },
+            "properties": {}
+        };
+        findNearestCourts(searchedFeature); //find and populate nearest courts
+    });
+
+    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
+    // Add geolocater control to the map.
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }), 'bottom-right');
+
+    map.addControl(new mapboxgl.NavigationControl('bottom-right'));
+    // When a click event occurs on a feature in the places layer, open a popup at the
+    // location of the feature, with description HTML from its properties.
+    map.on('click', 'unclustered-point', function(e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Reverse Geocoding with LocationIQ
+        // grabs address and information based on lat and long
+        response = Get("https://us1.locationiq.com/v1/reverse.php?key=7bfcc511b515eb&lat=" + coordinates[1] + "&lon=" + coordinates[0] + "&format=json");
+
+        // Variables to grab from JSON
+        var name = "";
+        var road = "";
+        var city = "";
+        var state = "";
+        var house_number = "";
+
+        //grab json fields and put into variables
+        name = response.address.name;
+        road = response.address.road;
+        city = response.address.city;
+        state = response.address.state;
+        display_name = response.display_name;
+        house_number = response.address.house_number;
+        village = response.address.village;
+        town = response.address.town;
+        country_code = response.address.country_code;
+        response2 = response.address;
+
+        html = "";
+
+        //html if address has name
+        if (response2.hasOwnProperty('road') === true && response2.hasOwnProperty('house_number') === true) {
+            html = (
+                '<h2 align="center">' + house_number + ", " + road + "</h2>" +
+                '<h4 style = "padding-left: 10px;" align="left" >Location: ' + city + ", " + state + '</h4>'
+            );
+        }
+        //html if address has name
+        else if (response2.hasOwnProperty('name') === true && response2.hasOwnProperty('city') === true) {
+            html = (
+                '<h2 align="center">' + name + "</h2>" +
+                '<h4 style = "padding-left: 10px;" align="left" >Location: ' + city + ", " + state + '</h4>'
+            );
+        }
+        //html if address has village
+        else if (response2.hasOwnProperty('village') === true && response2.hasOwnProperty('road') === true) {
+            html = (
+                '<h2 align="center">' + road + "</h2>" +
+                '<h4 style = "padding-left: 10px;" align="left" >Location: ' + village + ", " + state + '</h4>'
+            );
+        }
+        //html if address has village
+        else if (response2.hasOwnProperty('town') === true && response2.hasOwnProperty('road') === true) {
+            html = ('<h2 align="center">' + road + "</h2>" +
+                '<h4 style = "padding-left: 10px;" align="left" >Location: ' + village + ", " + state + '</h4>');
+        } else {
+            html = ('<h2 align="center">' + display_name.replace(", United States", "") + "</h2>");
+        }
+
+        console.log(response); // debugging purposes
+
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(html)
+            .addTo(map);
+
+    });
+
+    // Change the cursor to a pointer when the mouse is over the unclustered-point layer.
+    map.on('mouseenter', 'unclustered-point', function() {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'unclustered-point', function() {
+        map.getCanvas().style.cursor = '';
+    });
+    map.on()
+});
+// Once we've got a position, zoom and center the map
+// on it, and add a single marker.
+map.on('locationfound', function(e) {
+    map.fitBounds(e.bounds);
+
+    featureLayer.setGeoJSON({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [e.latlng.lng, e.latlng.lat]
+        },
+        properties: {
+            'title': 'Here I am!',
+            'marker-color': '#ff8888',
+            'marker-symbol': 'star'
+        }
+    });
+});
+// builds listing next to map by looking through json data
+function buildLocationList(data) {
+    // Iterate through the list of stores
+    for (i = 0; i < data.length; i++) {
+        if (i < 100) {
+            var currentFeature = data[i];
+            // writing this long form over and over again.
+            var address = currentFeature.name;
+            // format coordinates for use in geo coding
+            var coordinates = String(currentFeature.coordinates).replace("[", "").replace("]", "");
+            coordinates = coordinates.split(",");
+            coordinates = coordinates.map(Number);
+
+            // Select the listing container in the HTML and append a div
+            // with the class 'item' for each store
+            var listings = document.getElementById('listings');
+            var listing = listings.appendChild(document.createElement('div'));
+            listing.className = 'item';
+            listing.id = 'listing-' + i;
+
+            // Create a new link with the class 'title' for each store
+            // and fill it with the store address
+            var link = listing.appendChild(document.createElement('a'));
+            link.href = '#';
+            link.className = 'title';
+            link.dataPosition = i;
+            link.innerHTML = address;
+
+            // Add an event listener for the links in the sidebar listing
+            link.addEventListener('click', function(e) {
+                // Update the currentFeature to the store associated with the clicked link
+                var clickedListing = data[this.dataPosition];
+
+                // format coordinates
+                var coordinates = String(clickedListing.coordinates).replace("[", "").replace("]", "");
+                coordinates = coordinates.split(",");
+                coordinates = coordinates.map(Number);
+
+                // 1. Fly to the point associated with the clicked link
+                flyToStore(coordinates);
+                // 2. Close all other popups and display popup for clicked store
+                createPopUp(coordinates);
+                // 3. Highlight listing in sidebar (and remove highlight for all other listings)
+                var activeItem = document.getElementsByClassName('active');
+                if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                }
+                this.parentNode.classList.add('active');
+            });
+            // Create a new div with the class 'details' for each court
+            // and fill it with the city and state
+            var details = listing.appendChild(document.createElement('div'));
+            details.innerHTML = currentFeature.city + ", " + currentFeature.state;
+            if (currentFeature.distance) {
+                var roundedDistance = Math.round(currentFeature.distance * 100) / 100;
+                details.innerHTML += '<p><strong>' + roundedDistance + ' miles away</strong></p>';
+            }
+        } else {
+            break;
+        }
+    }
+}
+
+function getCourtInfo() {
+    if (typeof(Worker) !== "undefined") {
+        if (typeof(w) == "undefined") {
+            w = new Worker("{% static 'downloader.js' %}");
+        }
+        w.addEventListener('message', function(e) {
+            all_courts = e.data;
+            stopWorker();
+        }, false);
+    } else {
+        alert("Sorry your browser does not support Web Workers :(");
+    }
+
+    function stopWorker() {
+        w.terminate();
+        w = undefined;
+    }
+}
+// fly to store when clicked on
+function flyToStore(coordinates) {
+    map.flyTo({
+        center: coordinates,
+        zoom: 15
+    });
+}
+
+function createPopUp(coordinates) {
+    var popUps = document.getElementsByClassName('mapboxgl-popup');
+    // Check if there is already a popup on the map and if so, remove it
+    if (popUps[0]) popUps[0].remove();
+
+    // Reverse Geocoding with LocationIQ
+    // grabs address and information based on lat and long
+    response = Get("https://us1.locationiq.com/v1/reverse.php?key=7bfcc511b515eb&lat=" + coordinates[1] + "&lon=" + coordinates[0] + "&format=json");
+
+    // Variables to grab from JSON
+    var name = "";
+    var road = "";
+    var city = "";
+    var state = "";
+    var house_number = "";
+
+    //grab json fields and put into variables
+    name = response.address.name;
+    road = response.address.road;
+    city = response.address.city;
+    state = response.address.state;
+    display_name = response.display_name;
+    house_number = response.address.house_number;
+    village = response.address.village;
+    town = response.address.town;
+    country_code = response.address.country_code;
+    response2 = response.address;
+
+    html = "";
+
+    //html if address has name
+    if (response2.hasOwnProperty('road') === true && response2.hasOwnProperty('house_number') === true) {
+        html = (
+            '<h2 align="center">' + house_number + ", " + road + "</h2>" +
+            '<h4 style = "padding-left: 10px;" align="left" >Location: ' + city + ", " + state + '</h4>'
+        );
+    }
+    //html if address has name
+    else if (response2.hasOwnProperty('name') === true && response2.hasOwnProperty('city') === true) {
+        html = (
+            '<h2 align="center">' + name + "</h2>" +
+            '<h4 style = "padding-left: 10px;" align="left" >Location: ' + city + ", " + state + '</h4>'
+        );
+    }
+    //html if address has village
+    else if (response2.hasOwnProperty('village') === true && response2.hasOwnProperty('road') === true) {
+        html = (
+            '<h2 align="center">' + road + "</h2>" +
+            '<h4 style = "padding-left: 10px;" align="left" >Location: ' + village + ", " + state + '</h4>'
+        );
+    }
+    //html if address has village
+    else if (response2.hasOwnProperty('town') === true && response2.hasOwnProperty('road') === true) {
+        html = ('<h2 align="center">' + road + "</h2>" +
+            '<h4 style = "padding-left: 10px;" align="left" >Location: ' + village + ", " + state + '</h4>');
+    } else {
+        html = ('<h2 align="center">' + display_name.replace(", United States", "") + "</h2>");
+    }
+
+    console.log(response); // debugging purposes
+
+    new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(html)
+        .addTo(map);
+}
+/**
+ * Find nearest courts in viewport up to a certain zoom
+ * use webworker
+ * @param searchedFeature
+ */
+function findNearestCourts(searchedFeature) {
+    if (typeof(Worker) !== "undefined") {
+        w = new Worker("{% static 'court_worker.js' %}");
+        w.postMessage([searchedFeature, all_courts]);
+
+        w.addEventListener('message', function(e) {
+            // remove existing listings, since you will populate with new ones
+            var listings = document.getElementById('listings');
+            while (listings.firstChild) {
+                listings.removeChild(listings.firstChild);
+            }
+            buildLocationList(e.data);
+        }, false);
+    } else {
+        alert("Sorry your browser does not support Web Workers :(");
+    }
+}
+
+function Get(yourUrl) {
+    var Httpreq = new XMLHttpRequest(); // a new request
+    Httpreq.open("GET", yourUrl, false);
+    Httpreq.send(null);
+    return JSON.parse(Httpreq.responseText);
+}
+</script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.3.0/mapbox-gl-geocoder.min.js'></script>
+</body>
+</body>
+</html>
