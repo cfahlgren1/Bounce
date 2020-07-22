@@ -1,1 +1,1 @@
-web: gunicorn bounceapp.wsgi --log-file -
+web: gunicorn bounce.wsgi --log-file -
