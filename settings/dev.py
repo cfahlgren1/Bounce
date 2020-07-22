@@ -34,7 +34,10 @@ if os.name == 'nt':
     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal300'
+else:
+    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
