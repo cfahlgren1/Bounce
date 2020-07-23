@@ -1,1 +1,1 @@
-web: gunicorn bounce.wsgi --log-file -
+web: gunicorn bounce.wsgi --log-file - --log-level debug
