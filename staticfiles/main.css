@@ -1,0 +1,201 @@
+body {
+  color: #404040;
+  font: 400 16px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 25px;
+  margin: 0;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 20px 2px;
+}
+
+a {
+  color: #404040;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #101010;
+}
+
+.sidebar {
+  position: absolute;
+  width: 400px;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  /* border-right: 1px solid rgba(0, 0, 0, 0.25); */
+}
+
+.pad2 {
+  padding: 20px;
+}
+
+.map {
+  position: absolute;
+  /* left: 27%; */
+  width: 73%;
+  top: 0;
+  bottom: 0;
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+.heading {
+  color: #fff;
+  background-color: #4c5d7b;
+  border-bottom: 1px solid #eee;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 10px;
+}
+
+.listings {
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 60px;
+}
+
+.listings .item {
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.listings .item:hover{
+  background-color: #4c5d7b;
+  color: white;
+}
+
+.listings .item:hover .title{
+  background-color: #4c5d7b;
+  color: white;
+}
+
+.listings .item:last-child { border-bottom: none; }
+
+.listings .item .title {
+  display: block;
+  color: #white;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.listings .item .title small {
+  font-weight: 400;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+  height: 3px;
+  border-left: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4c5d7b;
+  border-radius: 0;
+}
+
+.clearfix { display: block; }
+
+.clearfix::after {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.map {
+  border-left: 1px solid #fff;
+  position: absolute;
+  margin-left: 400px;
+  width: -webkit-fill-available;
+  top: 0;
+  bottom: 0;
+}
+
+.pad2 {
+  padding: 0px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Marker tweaks */
+.mapboxgl-popup-close-button {
+  display: none;
+}
+
+.mapboxgl-popup-content {
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+  padding: 0;
+  width: 180px;
+}
+
+.mapboxgl-popup-content-wrapper {
+  padding: 1%;
+}
+
+.mapboxgl-popup-content h2 {
+  background: #FA8072;
+  color: #fff;
+  margin: 0;
+  display: block;
+  padding: 10px;
+  border-radius: 3px 3px 0 0;
+  font-weight: 700;
+  margin-top: -15px;
+}
+
+.mapboxgl-popup-content h4 {
+  margin: 0;
+  display: block;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.mapboxgl-popup-content div {
+  padding: 10px;
+}
+
+.mapboxgl-container .leaflet-marker-icon {
+  cursor: pointer;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+  margin-top: 15px;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+  border-bottom-color: #FA8072;
+}
