@@ -17,8 +17,9 @@ Bounce is a web app build in Django that locates and displays the nearest basket
   - Court Ratings
   - Save frequently visited courts
   - Submit Court to be added to Map
-  - Rest / GraphQL API
+  - Load courts through Rest / GraphQL API
   - User Account
+  - Decouple front and backend
 
 # Tech
 Bounce uses a number of open source projects and APIs to work properly:
