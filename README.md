@@ -35,4 +35,4 @@ Bounce uses a number of open source projects and APIs to work properly:
 * [Django](https://www.djangoproject.com/) - Python Web Framework
 * [LocationIQ API](https://locationiq.com/) - used to get reverse geocoding results for markers
 * [Mapbox API](https://www.mapbox.com) - used to provide forward-geocoding results and mapping
-* [POSTGRES ](https://www.mongodb.com/) - SQL database for scalability, modularity, and geoquerying support
+* [PostgreSQL](https://www.postgresql.org/) - SQL database for scalability, modularity, and geoquerying support
