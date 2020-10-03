@@ -1,11 +1,12 @@
-
+# Slack Channel
+#### Feel free to join the [Bounce Slack channel](https://join.slack.com/t/bounce-gfv9723/shared_invite/zt-hxj6ywsz-JwPxhxNTA0hrvuOl0orKyQ)
 
 # Environment Setup
 #### This will be updated soon
 * PostgreSQL Database with PostGIS
 * GeoDjango and GDAL Library
 
-The project setup closely follows the setup guide in this link: https://realpython.com/location-based-app-with-geodjango-tutorial/
+The project setup closely follows the [GeoDjango Project Setup](https://realpython.com/location-based-app-with-geodjango-tutorial/) Guide
 
 # How can I contribute?
 Issues are tracked through GitHub issues. If you see an issue that you would like to work on, comment, and send a pull request when ready.
