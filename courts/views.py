@@ -99,11 +99,11 @@ def home(request):
     form = EmailSignupForm()
     if request.method == "POST":
         email = request.POST["email"]
-        # check if email already exists in database
-        if not Signup.objects.filter(email=email).exists():
+        # check if email already exists in database, if
+        if form.is_valid():
             new_signup = Signup()
             new_signup.email = email
-            new_signup.save()
+            new_signup.save()            
     context = {
         'form': form
     }
@@ -189,8 +189,6 @@ class MapAPIKeyViewSet(viewsets.ModelViewSet):
     """
     queryset = MapAPIKey.objects.all()
     serializer_class = MapAPIKeySerializer
-    permission_classes = [permissions.IsAuthenticated]
-
 
 def anomaly(request):
     """
