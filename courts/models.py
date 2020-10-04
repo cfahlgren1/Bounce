@@ -40,7 +40,7 @@ class MapAPIKey(SingleActiveModel):
 
 # Court model for db structure for basketball court
 class Court(models.Model):
-    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=50, editable=True, unique=True)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, max_length=50, editable=True, unique=True)
     name = models.CharField(max_length=100, blank=False)
     description = models.CharField(max_length=100, blank=True)
 
