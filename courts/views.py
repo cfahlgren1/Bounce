@@ -99,9 +99,11 @@ def home(request):
     form = EmailSignupForm()
     if request.method == "POST":
         email = request.POST["email"]
-        new_signup = Signup()
-        new_signup.email = email
-        new_signup.save()
+        # check if email already exists in database
+        if not Signup.objects.filter(email=email).exists():
+            new_signup = Signup()
+            new_signup.email = email
+            new_signup.save()
     context = {
         'form': form
     }
