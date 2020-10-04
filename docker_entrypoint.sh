@@ -12,6 +12,4 @@ then
     echo "PostgreSQL ready"
 fi
 
-echo $DATABASE-$DATABASE_HOST-$DATABASE_PORT
-
 exec "$@"
