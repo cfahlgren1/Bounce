@@ -43,11 +43,6 @@ class Query(graphene.ObjectType):
 
     # Return all basketball courts to endpoint
     def resolve_all_basketball_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
-
         # if id is given, return court with id, else none
         if id:
             return [Court.objects.get(pk=id)]
@@ -94,10 +89,6 @@ class Query(graphene.ObjectType):
         return courts
 
     def resolve_closest_courts_to(self, info, lat, lng, category, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
 
         searched_location = Point(lat, lng, srid=4326)
         courts = Court.objects.annotate(distance=Distance('location',searched_location)).order_by('distance')
@@ -124,10 +115,6 @@ class Query(graphene.ObjectType):
 
     # Return all tennis courts to endpoint
     def resolve_all_tennis_courts(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
 
         # if id is given, return court with id, else none
         if id:
@@ -176,10 +163,6 @@ class Query(graphene.ObjectType):
 
     # Return all soccer fields to endpoint
     def resolve_all_soccer_fields(self, info, id=None, name=None, city=None, state=None, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
 
         # if id is given, return court with id, else none
         if id:
@@ -229,10 +212,6 @@ class Query(graphene.ObjectType):
 
     # Return all map styles to endpoint
     def resolve_all_map_styles(self, info, mapstyle=None, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
 
         mapstyles = MapStyle.objects.all()
 
@@ -258,20 +237,10 @@ class Query(graphene.ObjectType):
 
     # Return all map api keys to endpoint
     def resolve_all_map_api_key(self, info, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
-
         return gql_optimizer.query(MapAPIKey.objects.all(), info)
 
     # Return all user signups to endpoint
     def resolve_all_signups(self, info, first=None, skip=None, **kwargs):
-        # use authentication with jwt tokens
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError('Not logged in!')
-
         signups = gql_optimizer.query(Signup.objects.all(), info)
 
         # if skip is given, skip n values
