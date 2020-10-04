@@ -57,7 +57,7 @@ def email_list_signup(request):
     if request.method == "POST":
         if form.is_valid():
             email_signup_qs = Signup.objects.filter(email=form.instance.email)
-            if email_signup_qs.exits():
+            if email_signup_qs.exists():
                 messages.info(request, "You are already subscribed!")
             else:
                 suscribe(form.instance.email)

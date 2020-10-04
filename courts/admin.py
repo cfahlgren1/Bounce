@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
 from .models import Court, MapStyle, MapAPIKey, Signup
 from django.contrib.admin.models import LogEntry
+from django.contrib.auth.models import Permission
 
 # Support logging admin actions
 class LogEntryAdmin(admin.ModelAdmin):
@@ -46,3 +47,4 @@ admin.site.register(MapAPIKey, MapAPIKeyAdmin)
 admin.site.register(MapStyle, MapStyleAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
 admin.site.register(Signup, SignupAdmin)
+admin.site.register(Permission)
