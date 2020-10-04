@@ -35,4 +35,55 @@ Bounce uses a number of open source projects and APIs to work properly:
 * [Django](https://www.djangoproject.com/) - Python Web Framework
 * [LocationIQ API](https://locationiq.com/) - used to get reverse geocoding results for markers
 * [Mapbox API](https://www.mapbox.com) - used to provide forward-geocoding results and mapping
-* [POSTGRES ](https://www.mongodb.com/) - SQL database for scalability, modularity, and geoquerying support
+* [PostgreSQL](https://www.postgresql.org/) - SQL database for scalability, modularity, and geoquerying support
+
+# Setup
+
+## Docker
+
+0. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+
+1.  Make `docker_entrypoint.sh` executable
+    ```bash
+    # Linux
+    chmod +x docker_entrypoint.sh
+    ```
+
+2.  Start and build the 2 containers
+
+    -   `--build` builds the images defined in the `docker-compose.yml` file.
+    -   `-d` dettaches the terminal from the building process.
+    -   Finally the script from (`docker_entrypoint.sh`) is executed.
+
+    ```bash
+    # In the same directory as `docker-compose.yml`
+    docker-compose up -d --build
+    ```
+
+    - If there are errors you can see the logs
+    ```bash
+    docker-compose logs
+    ```
+
+3. Go to http://localhost:8000
+
+    - You should see the frontend of the project
+
+    <img src="https://i.imgur.com/JDQp06y.png" width="800">
+
+4. Create a superuser (Optional)
+
+    - In the same directory as `docker-compose.yml` run
+    ```bash
+    # This open a bash shell inside the container
+    docker-compose exec web bash
+    ```
+
+    - Then run `./manage.py createsuperuser`
+    
+    - Run `exit` to exit the container. It will keep running.
+
+
+5. To stop the containers run `docker-compose stop`
+
+    - :warning: Be careful with [`docker-compose down`](https://docs.docker.com/compose/reference/down/) which stops the container but also **removes** them.
