@@ -10,6 +10,9 @@ Bounce is a web app built in Django that locates and displays the nearest basket
 
 ![Image](https://i.ibb.co/Mp1dxwB/readme.jpg)
 
+# Contributing
+### Visit [Contributing.md](https://github.com/cfahlgren1/Bounce/blob/postgis/CONTRIBUTING.md)
+
 # Features
   - Basketball court listing of outdoor courts near specified address/location
   - Light and Dark Theme for Maps
@@ -87,3 +90,4 @@ Bounce uses a number of open source projects and APIs to work properly:
 5. To stop the containers run `docker-compose stop`
 
     - :warning: Be careful with [`docker-compose down`](https://docs.docker.com/compose/reference/down/) which stops the container but also **removes** them.
+=======
