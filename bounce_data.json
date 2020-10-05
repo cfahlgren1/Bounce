@@ -1,0 +1,27 @@
+[{
+        "model": "courts.mapstyle",
+        "pk": 1,
+        "fields": {
+            "active": true,
+            "map_style": "mapbox://styles/cfahlgren1/cjwh4ygny4a1w1cqk2av9502t",
+            "description": "Monochrome"
+        }
+    },
+    {
+        "model": "courts.mapstyle",
+        "pk": 2,
+        "fields": {
+            "active": false,
+            "map_style": "mapbox://styles/cfahlgren1/cjwhv3k951qzw1cs0q5ukvtxi",
+            "description": "Streets"
+        }
+    },
+    {
+        "model": "courts.mapapikey",
+        "pk": 1,
+        "fields": {
+            "active": true,
+            "api_key": "pk.eyJ1IjoiY2ZhaGxncmVuMSIsImEiOiJjazdiZWtqaDEwMDhyM2xvNTJoZDFxcjFqIn0.Chg6D1kZntCd3Gt3d0HxpA"
+        }
+    }
+]
