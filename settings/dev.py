@@ -211,15 +211,6 @@ DATABASES['default'].update(prod_db)
 
 django_heroku.settings(locals(),databases=False)
 
-sentry_sdk.init(
-    dsn=os.environ.get('SENTRY_DSN'),
-    integrations=[DjangoIntegration()],
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
-
 MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
 MAILCHIMP_DATA_CENTER = os.environ.get('MAILCHIMP_API_KEY')
 MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_API_KEY')
