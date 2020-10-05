@@ -1,8 +1,5 @@
-import json
 from django.test import TestCase
 from django.contrib.gis.geos import fromstr
-from graphene_django.utils.testing import GraphQLTestCase
-from bounce.schema import schema
 from ..models import Court, MapAPIKey, MapStyle
 
 class CourtTest(TestCase):
@@ -77,5 +74,3 @@ class MapAPIKeyTest(TestCase):
     def test_map_values(self):
         w = self.create_api_key()
         self.assertEqual(w.api_key, 'testkeytestkey')
-
-

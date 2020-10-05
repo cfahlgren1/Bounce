@@ -97,15 +97,24 @@ def simple_upload(request):
 
 def home(request):
     form = EmailSignupForm()
+    error_message = None
     if request.method == "POST":
         email = request.POST["email"]
         # check if email already exists in database, if
         if form.is_valid():
             new_signup = Signup()
             new_signup.email = email
-            new_signup.save()            
+            new_signup.save()
+        else:
+            # string matching like this is a bad solution.
+            # can't think of anything else, that's why going with this.
+            if 'Signup with this Email already exists.' in form.errors:
+                error_message = f'{email} is already registered.'
+            error_message = 'Something went wrong while registering you.'
+
     context = {
-        'form': form
+        'form': form,
+        'error_message': error_message
     }
     return render(request, 'courts/home/index.html', context)
 
