@@ -108,10 +108,9 @@ def home(request):
         else:
             # string matching like this is a bad solution.
             # can't think of anything else, that's why going with this.
+            error_message = 'Something went wrong while registering you.'
             if 'Signup with this Email already exists.' in form.errors:
                 error_message = f'{email} is already registered.'
-            error_message = 'Something went wrong while registering you.'
-
     context = {
         'form': form,
         'error_message': error_message
