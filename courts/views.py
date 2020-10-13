@@ -163,7 +163,7 @@ class ActiveMapStyleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = MapStyle.objects.get(active=True)  # get map that is currently active
+    queryset = MapStyle.objects.filter(active=True)  # get map that is currently active
     serializer_class = MapStyleSerializer
 
 
@@ -205,5 +205,3 @@ def anomaly(request):
     t = loader.get_template('anomaly/index.html')
     c = {'state_count': state_count, 'country_count': country_count, 'total_basketball': total_basketball, 'total_soccer': total_soccer, 'total_tennis': total_tennis, 'road_count': road_count, 'users_count': total_users}
     return HttpResponse(t.render(c))
-
-
