@@ -1,6 +1,4 @@
 # Bounce - Basketball Court Finder
-## Contributors Needed!
-##### Creator: Caleb Fahlgren
 ##### Project Email: bounceapp@protonmail.com
 ##### URL: https://bouncemap.com
  
@@ -68,13 +66,26 @@ Bounce uses a number of open source projects and APIs to work properly:
     docker-compose logs
     ```
 
-3. Go to http://localhost:8000
+3. Load Initial Database Models
+
+    - In the same directory as `docker-compose.yml` run
+    ```bash
+    # This open a bash shell inside the container
+    docker-compose exec web bash
+    ```
+
+    - Then run `./manage.py loaddata bounce_data.json`
+    
+    - Run `exit` to exit the container. It will keep running.
+
+
+4. Go to http://localhost:8000
 
     - You should see the frontend of the project
 
     <img src="https://i.imgur.com/JDQp06y.png" width="800">
 
-4. Create a superuser (Optional)
+5. Create a superuser (Optional)
 
     - In the same directory as `docker-compose.yml` run
     ```bash
@@ -87,7 +98,7 @@ Bounce uses a number of open source projects and APIs to work properly:
     - Run `exit` to exit the container. It will keep running.
 
 
-5. To stop the containers run `docker-compose stop`
+6. To stop the containers run `docker-compose stop`
 
     - :warning: Be careful with [`docker-compose down`](https://docs.docker.com/compose/reference/down/) which stops the container but also **removes** them.
 =======
