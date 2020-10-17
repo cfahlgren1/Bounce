@@ -12,4 +12,8 @@ then
     echo "PostgreSQL ready"
 fi
 
+# Run the Django migrations
+python manage.py migrate
+python manage.py loaddata bounce_data.json
+
 exec "$@"

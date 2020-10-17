@@ -74,7 +74,7 @@ Bounce uses a number of open source projects and APIs to work properly:
     docker-compose exec web bash
     ```
 
-    - Then run `./manage.py loaddata bounce_data.json`
+    - Then run `python manage.py loaddata bounce_data.json`
     
     - Run `exit` to exit the container. It will keep running.
 
@@ -102,3 +102,13 @@ Bounce uses a number of open source projects and APIs to work properly:
 
     - :warning: Be careful with [`docker-compose down`](https://docs.docker.com/compose/reference/down/) which stops the container but also **removes** them.
 =======
+
+
+## Troubleshooting
+
+Ensure that your .env file is present and the required variables are set. 
+If you want to start fresh, you can remove all docker containers and volumes 
+using the command
+```
+docker-compose down && docker rm -f $(docker ps -a -q) && docker volume rm $(docker volume ls -q)
+```
