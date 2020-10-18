@@ -1,8 +1,6 @@
 from .base import *
 import environ
 
-
-
 base = environ.Path(__file__) - 2 # two folders back (/a/b/ - 2 = /)
 environ.Env.read_env(env_file=base('.env')) # reading .env file
 
