@@ -15,43 +15,6 @@ from .forms import EmailSignupForm
 import requests, json
 
 # Create your views here.
-
-# list of mobile User Agents
-mobile_uas = [
-    'w3c ', 'acs-', 'alav', 'alca', 'amoi', 'audi', 'avan', 'benq', 'bird', 'blac',
-    'blaz', 'brew', 'cell', 'cldc', 'cmd-', 'dang', 'doco', 'eric', 'hipt', 'inno',
-    'ipaq', 'java', 'jigs', 'kddi', 'keji', 'leno', 'lg-c', 'lg-d', 'lg-g', 'lge-',
-    'maui', 'maxo', 'midp', 'mits', 'mmef', 'mobi', 'mot-', 'moto', 'mwbp', 'nec-',
-    'newt', 'noki', 'oper', 'palm', 'pana', 'pant', 'phil', 'play', 'port', 'prox',
-    'qwap', 'sage', 'sams', 'sany', 'sch-', 'sec-', 'send', 'seri', 'sgh-', 'shar',
-    'sie-', 'siem', 'smal', 'smar', 'sony', 'sph-', 'symb', 't-mo', 'teli', 'tim-',
-    'tosh', 'tsm-', 'upg1', 'upsi', 'vk-v', 'voda', 'wap-', 'wapa', 'wapi', 'wapp',
-    'wapr', 'webc', 'winw', 'winw', 'xda', 'xda-'
-]
-
-mobile_ua_hints = ['SymbianOS', 'Opera Mini', 'iPhone']
-
-# MailChimp API Info for Email Subscription
-MAILCHIMP_API_KEY = settings.MAILCHIMP_API_KEY
-MAILCHIMP_DATA_CENTER = settings.MAILCHIMP_DATA_CENTER
-MAILCHIMP_EMAIL_LIST_ID = settings.MAILCHIMP_EMAIL_LIST_ID
-
-api_url = f'https://{MAILCHIMP_DATA_CENTER}.api.mailchimp.com/3.0'
-members_endpoint = f'{api_url}/lists/{MAILCHIMP_EMAIL_LIST_ID}/members'
-
-# MailChimp POST API / Subscribe Method
-def suscribe(email):
-    data = {
-        "email_address": email,
-        "status": "subscribed"
-    }
-    r = requests.post(
-        members_endpoint,
-        auth=("", MAILCHIMP_API_KEY),
-        data=json.dumps(data)
-    )
-    return r.status_code, r.json()
-
 def email_list_signup(request):
     form = EmailSignupForm(request.POST or None)
     if request.method == "POST":
@@ -60,26 +23,8 @@ def email_list_signup(request):
             if email_signup_qs.exists():
                 messages.info(request, "You are already subscribed!")
             else:
-                suscribe(form.instance.email)
                 form.save()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-
-def mobileBrowser(request):
-    ''' Super simple device detection, returns True for mobile devices '''
-
-    mobile_browser = False
-    ua = request.META['HTTP_USER_AGENT'].lower()[0:4]
-
-    if (ua in mobile_uas):
-        mobile_browser = True
-    else:
-        for hint in mobile_ua_hints:
-            if request.META['HTTP_USER_AGENT'].find(hint) > 0:
-                mobile_browser = True
-
-    return mobile_browser
-
 
 def simple_upload(request):
     if request.method == 'POST':

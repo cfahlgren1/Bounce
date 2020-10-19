@@ -156,8 +156,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 prod_db  =  dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
-
-
-MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
-MAILCHIMP_DATA_CENTER = os.environ.get('MAILCHIMP_API_KEY')
-MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_API_KEY')
