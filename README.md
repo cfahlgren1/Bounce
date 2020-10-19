@@ -68,16 +68,10 @@ Bounce uses a number of open source projects and APIs to work properly:
 
 3. Load Initial Database Models
 
-    - In the same directory as `docker-compose.yml` run
+    - It's also necessary to load in the fixtures when setting up the database:
     ```bash
-    # This open a bash shell inside the container
-    docker-compose exec web bash
+    docker-compose exec web python manage.py loaddata bounce_data.json
     ```
-
-    - Then run `./manage.py loaddata bounce_data.json`
-    
-    - Run `exit` to exit the container. It will keep running.
-
 
 4. Go to http://localhost:8000
 
@@ -85,20 +79,40 @@ Bounce uses a number of open source projects and APIs to work properly:
 
     <img src="https://i.imgur.com/JDQp06y.png" width="800">
 
-5. Create a superuser (Optional)
+5. Enter a shell within the Docker container
 
+    - To enter an interactive shell (in this case for the "web" service), you can use
+    ```bash
+    docker-compose exec web bash
+    ```
+
+6. Create a superuser (Optional)
+
+    - You may enter an interactive shell within the Docker container
+     (in this case the container corresponding to the "web" service)
     - In the same directory as `docker-compose.yml` run
     ```bash
     # This open a bash shell inside the container
     docker-compose exec web bash
     ```
 
-    - Then run `./manage.py createsuperuser`
+    - Then run `python manage.py createsuperuser`
     
     - Run `exit` to exit the container. It will keep running.
 
-
-6. To stop the containers run `docker-compose stop`
+7. To stop the containers run `docker-compose stop`
 
     - :warning: Be careful with [`docker-compose down`](https://docs.docker.com/compose/reference/down/) which stops the container but also **removes** them.
 =======
+
+
+## Troubleshooting
+
+Ensure that your .env file is present and the required variables are set. 
+Sometimes starting fresh can help, since things like volumes will persist
+even after a container is removed, which can cause issues. You can remove all 
+docker containers and volumes using the command:
+```bash
+docker-compose down && docker rm -f $(docker ps -a -q) && docker volume rm $(docker volume ls -q)
+```
+and then trying the above steps again.

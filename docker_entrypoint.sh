@@ -12,4 +12,7 @@ then
     echo "PostgreSQL ready"
 fi
 
+# Run the Django migrations
+python manage.py migrate
+
 exec "$@"

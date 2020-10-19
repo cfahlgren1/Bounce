@@ -5,6 +5,7 @@ services:
         build: .
         # Run with dev.py settings
         command: python manage.py runserver 0.0.0.0:8000 --settings=settings.dev
+        container_name: web
         volumes:
             - .:/code
         ports:
@@ -16,10 +17,13 @@ services:
             - db
     db:
         image: postgis/postgis:12-3.0
+        container_name: db
         volumes:
             - postgres_data:/var/lib/postgresql/data
         environment:
-            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_PASSWORD=${PASSWORD}
+            - POSTGRES_USER=${NAME}
+            - POSTGRES_DB=${DATABASE}
 
 # Makes data persistent
 volumes:
