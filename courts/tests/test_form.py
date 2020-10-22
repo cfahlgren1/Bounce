@@ -22,4 +22,6 @@ class SignupFormTest(TestCase):
 
         duplicate_signup = self.signup_form(email='user@dummy.com')
         self.assertFalse(duplicate_signup.is_valid())
-        self.assertEqual(duplicate_signup.errors, ['Signup with this Email already exists.'])
+
+        error = {'email': ['Signup with this Email already exists.']}
+        self.assertEqual(duplicate_signup.errors, error)
