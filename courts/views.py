@@ -97,6 +97,7 @@ def simple_upload(request):
 
 def home(request):
     error_message = None
+    success_message = None
     if request.method == "POST":
         email = request.POST["email"]
         form = EmailSignupForm(data={"email": email})
@@ -107,6 +108,7 @@ def home(request):
             new_signup = Signup()
             new_signup.email = email
             new_signup.save()
+            success_message = f"{email} is registered successfully."
         else:
             email_errors = form.errors.get('email')
             if email_errors:
@@ -116,15 +118,16 @@ def home(request):
                 if 'Signup with this Email already exists.' in email_errors:
                     error_message = f'{email} is already registered.'
 
-            # revert form back to empty form.
-            form = EmailSignupForm()
+        # revert form back to empty form.
+        form = EmailSignupForm()
 
     else:
         form = EmailSignupForm()
 
     context = {
         'form': form,
-        'error_message': error_message
+        'error_message': error_message,
+        'success_message': success_message,
     }
     return render(request, 'courts/home/index.html', context)
 

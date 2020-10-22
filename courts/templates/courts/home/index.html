@@ -126,6 +126,11 @@
                                                     <strong>{{ error_message|escape }}</strong>
                                                 </div>
                                             {% endif %}
+                                            {% if success_message %}
+                                                <div class="notification is-success">
+                                                    <strong>{{ success_message|escape }}</strong>
+                                                </div>
+                                            {% endif %}
                                             <div class="button is-primary is-centered is-fullwidth" type="submit" value="submit"><strong>Join Early Access</strong></div>
                                         </form>
                                     </div>
