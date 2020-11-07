@@ -1,6 +1,7 @@
-import graphene, graphql_geojson, uuid, hashlib
+import graphene
+import graphql_geojson
+import hashlib
 from graphql import GraphQLError
-from graphql_auth.schema import UserQuery, MeQuery
 import graphene_django_optimizer as gql_optimizer
 from graphql_auth import mutations
 from django.db.models import Q

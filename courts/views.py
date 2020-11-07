@@ -1,58 +1,11 @@
 from django.shortcuts import render
-from django.conf import settings
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from .models import Court, MapStyle, MapAPIKey, Signup
-from tablib import Dataset
-from .resources import CourtResource
+from .models import Court, MapAPIKey, MapStyle
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 from django.template import loader
 from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, GroupSerializer, CourtSerializer, MapStyleSerializer, MapAPIKeySerializer
-from .forms import EmailSignupForm
-import requests, json
-
-# Create your views here.
-def email_list_signup(request):
-    form = EmailSignupForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            email_signup_qs = Signup.objects.filter(email=form.instance.email)
-            if email_signup_qs.exists():
-                messages.info(request, "You are already subscribed!")
-            else:
-                form.save()
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-def simple_upload(request):
-    if request.method == 'POST':
-        court_resource = CourtResource()
-        dataset = Dataset()
-        new_persons = request.FILES['myfile']
-
-        imported_data = dataset.load(new_persons.read())
-        result = court_resource.import_data(dataset, dry_run=True)  # Test the data import
-
-        if not result.has_errors():
-            court_resource.import_data(dataset, dry_run=False)  # Actually import now
-
-    return render(request, 'core/simple_upload.html')
-
-def home(request):
-    form = EmailSignupForm()
-    if request.method == "POST":
-        email = request.POST["email"]
-        # check if email already exists in database, if
-        if form.is_valid():
-            new_signup = Signup()
-            new_signup.email = email
-            new_signup.save()            
-    context = {
-        'form': form
-    }
-    return render(request, 'courts/home/index.html', context)
 
 @require_GET
 def robots_txt(request):
@@ -62,28 +15,13 @@ def robots_txt(request):
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
-
-# Loader.io Verification
-def loaderio(request):
-    return HttpResponse("loaderio-bfdc71f8924d72801af8766b33d8a6a4", content_type="text/plain")
-
-
-def detail(request):
-    """
-    Courts Page
-    """
-    style = MapStyle.objects.get(active=True)  # get map that is currently active
-    mapbox_key = MapAPIKey.objects.get(
-        active=True)  # get first api_key; only should be one, can be changed later if rotating api keys etc.
-
-    t = loader.get_template('courts/map/index.html')
-
-    c = {'map_style': style, 'api_key': mapbox_key.api_key, }  # page data
-    return HttpResponse(t.render(c))
-
 # Error 500 page
 def handler500(request):
     return render(request, '500/index.html', status=500)
+
+# Error 404 page
+def handler404(request, exception):
+    return render(request, '404/index.html', status=404)
 
 
 # API METHODS

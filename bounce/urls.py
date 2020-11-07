@@ -28,19 +28,15 @@ router.register(r'courts', views.CourtViewSet)
 router.register(r'mapstyles', views.MapStyleViewSet)
 router.register(r'api_keys', views.MapAPIKeyViewSet)
 
-def trigger_error(request):
-    division_by_zero = 1 / 0
-
 urlpatterns = [
     path('admin/', admin.site.urls),  # admin site
-    path('sentry-debug/', trigger_error),
-    path('', views.home, name="home"),  # home page
-    path('courts/', views.detail, name="detail"),  # refer to court urls file
+    path('', views.anomaly),  # home page
     path('api/', include(router.urls)),
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('anomaly/', views.anomaly),
     path('robots.txt/', views.robots_txt), # add robots.txt link
-    path ('loaderio-bfdc71f8924d72801af8766b33d8a6a4/', views.loaderio), # loaderio verification
 ]
+
 handler500 = 'courts.views.handler500'
+handler404 = 'courts.views.handler404'
+
