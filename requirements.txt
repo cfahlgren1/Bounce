@@ -17,7 +17,7 @@ django-graphql-geojson==0.1.4
 django-graphql-jwt==0.3.0
 django-heroku==0.3.1
 django-import-export==2.3.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 environ==1.0
 et-xmlfile==1.0.1
 graphene==2.1.8
